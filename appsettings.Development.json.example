@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "Default": "server=localhost;port=3306;database=shipnet;user=root;password=TU_PASSWORD_AQUI"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
