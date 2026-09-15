@@ -1,0 +1,62 @@
+## .NET / ASP.NET Core
+bin/
+obj/
+out/
+publish/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+## Resultados de build/test
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]ld/
+[Ll]og/
+[Ll]ogs/
+TestResults/
+coverage*.json
+coverage*.xml
+coverage*.info
+
+## Visual Studio / VS Code / Rider
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.sln.docstates
+
+## Secretos y configuración local (¡MUY importante para MySQL/Identity!)
+appsettings.*.local.json
+appsettings.Local.json
+appsettings.Production.json
+*.pfx
+*.key
+secrets.json
+.env
+.env.*
+
+## EF Core
+*.db
+*.sqlite
+*.sqlite3
+
+## Node (si usas npm/libman/tailwind para wwwroot)
+node_modules/
+
+## Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+## Otros
+*.log
+*.tmp
+*.bak
+*.swp
