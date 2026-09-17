@@ -129,7 +129,20 @@ public class RegisterModel : PageModel
 
             if (result.Succeeded)
             {
+                var roleResult =
                 await _userManager.AddToRoleAsync(user, "Estudiante");
+
+                    if (!roleResult.Succeeded)
+                    {
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError(
+                                string.Empty,
+                                error.Description);
+                        }
+
+                    return Page();
+                    }
 
                 _logger.LogInformation("User created a new account with password.");
 
