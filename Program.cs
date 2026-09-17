@@ -56,4 +56,10 @@ app.MapControllerRoute(
 // Rutas de ASP.NET Core Identity
 app.MapRazorPages();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    await SeedData.InitializeAsync(scope.ServiceProvider);
+}
+
 app.Run();
