@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         connectionString,
         ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
 // ASP.NET Core Identity
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
