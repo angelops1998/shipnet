@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using shipnet.Data;
+using shipnet.Models;
 
 namespace shipnet.Areas.Identity.Pages.Account.Manage;
 

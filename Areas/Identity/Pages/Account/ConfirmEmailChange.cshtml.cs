@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using shipnet.Data;
+using shipnet.Models;
 namespace shipnet.Areas.Identity.Pages.Account;
 
 public class ConfirmEmailChangeModel : PageModel
