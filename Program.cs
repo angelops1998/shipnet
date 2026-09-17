@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using shipnet.Data;
@@ -28,6 +29,8 @@ builder.Services
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 
 // Razor Pages para Identity
 builder.Services.AddRazorPages();
