@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Administración";
+}
+
+<h2 class="mb-3">Administración</h2>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card card-equipo">
+            <div class="card-header">Equipos</div>
+            <div class="card-body">
+                <p class="card-text">PCs del laboratorio autorizadas (código, MAC, ubicación).</p>
+                <a asp-controller="Equipos" asp-action="Index" class="btn btn-primary btn-sm">Gestionar equipos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-evaluacion">
+            <div class="card-header">Materias</div>
+            <div class="card-body">
+                <p class="card-text">Materias que se dictan en el laboratorio.</p>
+                <a asp-controller="Materias" asp-action="Index" class="btn btn-primary btn-sm">Gestionar materias</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-sesion">
+            <div class="card-header">Grupos</div>
+            <div class="card-body">
+                <p class="card-text">Grupos por materia con su docente asignado.</p>
+                <a asp-controller="Grupos" asp-action="Index" class="btn btn-primary btn-sm">Gestionar grupos</a>
+            </div>
+        </div>
+    </div>
+</div>
