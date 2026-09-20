@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Guía de estilo";
+}
+
+<div class="mb-5">
+    <h1 class="mb-1" style="color: var(--bs-primary);">ShipNet</h1>
+</div>
+
+<!-- ===================== BOTONES ===================== -->
+<section class="mb-5">
+    <h3 class="border-bottom pb-2 mb-3">Botones</h3>
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary">Registrar asistencia</button>
+        <button class="btn btn-secondary">Cancelar</button>
+        <button class="btn btn-danger">Cerrar sesión de evaluación</button>
+        <button class="btn btn-primary" disabled>Guardando...</button>
+    </div>
+</section>
+
+<!-- ===================== CARDS ===================== -->
+<section class="mb-5">
+    <h3 class="border-bottom pb-2 mb-3">Cards</h3>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card card-sesion">
+                <div class="card-header">Sesión de asistencia</div>
+                <div class="card-body">
+                    <h5 class="card-title">Grupo A — Redes I</h5>
+                    <p class="card-text mb-1"><strong>Fecha:</strong> 15/09/2026</p>
+                    <p class="card-text mb-3"><strong>Estado:</strong> Abierta</p>
+                    <button class="btn btn-primary btn-sm">Ver registros</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-evaluacion">
+                <div class="card-header">Evaluación</div>
+                <div class="card-body">
+                    <h5 class="card-title">Parcial 1 — Bases de Datos</h5>
+                    <p class="card-text mb-1"><strong>Duración:</strong> 60 min</p>
+                    <p class="card-text mb-3"><strong>Inicia:</strong> 16/09 08:00</p>
+                    <button class="btn btn-secondary btn-sm">Editar</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-equipo">
+                <div class="card-header">Equipo de laboratorio</div>
+                <div class="card-body">
+                    <h5 class="card-title">PC-14</h5>
+                    <p class="card-text mb-1"><strong>MAC:</strong> A4:5E:60:12:3F:9C</p>
+                    <p class="card-text mb-3"><strong>Ubicación:</strong> Lab 2, fila 3</p>
+                    <button class="btn btn-secondary btn-sm">Detalles</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== ALERTAS ===================== -->
+<section class="mb-5">
+    <h3 class="border-bottom pb-2 mb-3">Alertas</h3>
+    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+        <span class="me-2 fw-bold">✔</span>
+        <div>Asistencia registrada correctamente.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+        <span class="me-2 fw-bold">X</span>
+        <div>Este equipo no está autorizado para rendir la evaluación.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
+        <span class="me-2 fw-bold">!</span>
+        <div>Quedan 5 minutos para que termine la evaluación.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+</section>
+
+<!-- ===================== FORMULARIO ===================== -->
+<section class="mb-5">
+    <h3 class="border-bottom pb-2 mb-3">Formulario</h3>
+    <div class="card">
+        <div class="card-body">
+            <form>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="nombreEquipo">Código de equipo</label>
+                        <input type="text" class="form-control" id="nombreEquipo" placeholder="PC-14" />
+                        <div class="form-text">Debe coincidir con el código registrado en el laboratorio.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="macEquipo">MAC Address</label>
+                        <input type="text" class="form-control is-invalid" id="macEquipo" value="A4:5E:60" />
+                        <div class="invalid-feedback">El formato debe ser AA:BB:CC:DD:EE:FF.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="grupoSelect">Grupo</label>
+                        <select class="form-select" id="grupoSelect">
+                            <option selected>Selecciona un grupo...</option>
+                            <option>Grupo A — Redes I</option>
+                            <option>Grupo B — Bases de Datos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="ubicacionEquipo">Ubicación</label>
+                        <input type="text" class="form-control" id="ubicacionEquipo" placeholder="Lab 2, fila 3" />
+                    </div>
+                </div>
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== TABLA ===================== -->
+<section class="mb-5">
+    <h3 class="border-bottom pb-2 mb-3">Tabla de listados</h3>
+    <div class="table-responsive">
+        <table class="table table-shipnet align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Estudiante</th>
+                    <th>Equipo</th>
+                    <th>Hora de registro</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Bianca Morales</td>
+                    <td>PC-14</td>
+                    <td>08:02</td>
+                    <td><span class="badge" style="background-color: var(--bs-success);">Presente</span></td>
+                </tr>
+                <tr>
+                    <td>Angel Gomez</td>
+                    <td>PC-09</td>
+                    <td>08:16</td>
+                    <td><span class="badge" style="background-color: var(--bs-warning); color:#4a3410;">Tarde</span></td>
+                </tr>
+                <tr>
+                    <td>Daniel Villarroel</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><span class="badge" style="background-color: var(--bs-danger);">Ausente</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
