@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Abrir sesión de asistencia";
+}
+
+<div class="card">
+    <div class="card-header">Abrir sesión de asistencia</div>
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label" for="grupoId">Grupo</label>
+                <select class="form-select" id="grupoId" name="grupoId" asp-items="ViewBag.Grupos"></select>
+            </div>
+            <button type="submit" class="btn btn-primary">Abrir</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
