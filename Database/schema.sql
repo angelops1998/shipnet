@@ -73,7 +73,7 @@ CREATE TABLE AspNetUserTokens (
 CREATE TABLE Materias (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL,
-    Codigo VARCHAR(50) NOT NULL
+    Codigo VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE Equipos (
@@ -136,6 +136,7 @@ CREATE TABLE RegistrosAsistencia (
     EquipoId INT NOT NULL,
     HoraRegistro TIME NOT NULL,
     Estado VARCHAR(50) NOT NULL,
+    CONSTRAINT UQ_Registro_Sesion_Estudiante UNIQUE (SesionAsistenciaId, EstudianteId),
     CONSTRAINT FK_Registros_Sesiones FOREIGN KEY (SesionAsistenciaId) REFERENCES SesionesAsistencia (Id) ON DELETE CASCADE,
     CONSTRAINT FK_Registros_Estudiantes FOREIGN KEY (EstudianteId) REFERENCES Estudiantes (Id) ON DELETE CASCADE,
     CONSTRAINT FK_Registros_Equipos FOREIGN KEY (EquipoId) REFERENCES Equipos (Id) ON DELETE CASCADE
