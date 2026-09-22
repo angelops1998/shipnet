@@ -1,0 +1,31 @@
+@model List<shipnet.Models.SesionAsistencia>
+@{
+    ViewData["Title"] = "Marcar asistencia";
+}
+
+<h2>Marcar asistencia</h2>
+<p class="text-muted">Tu equipo: <code>@ViewBag.Mac</code></p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay sesiones abiertas en este momento.</div>
+}
+
+<div class="row g-3">
+    @foreach (var s in Model)
+    {
+        <div class="col-md-4">
+            <div class="card card-sesion">
+                <div class="card-header">Sesión abierta</div>
+                <div class="card-body">
+                    <h5 class="card-title">@s.Grupo.Materia.Nombre - @s.Grupo.Nombre</h5>
+                    <p class="card-text mb-3"><strong>Inicio:</strong> @s.HoraInicio?.ToString(@"hh\:mm")</p>
+                    <form method="post">
+                        <input type="hidden" name="sesionId" value="@s.Id" />
+                        <button type="submit" class="btn btn-primary btn-sm">Marcar presente</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
