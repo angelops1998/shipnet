@@ -1,0 +1,34 @@
+@model ShipNetMvc.Models.SesionAsistenciaDto
+@{
+    ViewData["Title"] = "Registros de asistencia";
+}
+
+<h2>@Model.Grupo.Materia?.Nombre - @Model.Grupo.Nombre</h2>
+<p><strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy") · <strong>Estado:</strong> @(Model.Abierta ? "Abierta" : "Cerrada")</p>
+
+<div class="table-responsive">
+    <table class="table table-shipnet align-middle">
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>CI</th>
+                <th>Equipo</th>
+                <th>Hora</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.RegistrosAsistencia)
+            {
+                <tr>
+                    <td>@r.Estudiante.Nombre @r.Estudiante.Apellido</td>
+                    <td>@r.Estudiante.CI</td>
+                    <td>@r.Equipo.Codigo</td>
+                    <td>@r.HoraRegistro.ToString(@"hh\:mm")</td>
+                    <td><span class="badge @(r.Estado == "Presente" ? "bg-success" : "bg-warning text-dark")">@r.Estado</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
