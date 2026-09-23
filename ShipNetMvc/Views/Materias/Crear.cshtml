@@ -1,0 +1,26 @@
+@model ShipNetMvc.Models.MateriaDto
+@{
+    ViewData["Title"] = "Nueva materia";
+}
+
+<div class="card">
+    <div class="card-header">Nueva materia</div>
+    <div class="card-body">
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="Codigo">Código</label>
+                    <input class="form-control" asp-for="Codigo" placeholder="RED-101" />
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label" asp-for="Nombre">Nombre</label>
+                    <input class="form-control" asp-for="Nombre" placeholder="Redes I" />
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

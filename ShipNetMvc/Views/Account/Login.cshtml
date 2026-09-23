@@ -1,0 +1,26 @@
+@model ShipNetMvc.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Iniciar sesión</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="Email">Correo</label>
+                        <input class="form-control" asp-for="Email" type="email" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="Password">Contraseña</label>
+                        <input class="form-control" asp-for="Password" type="password" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                    <a asp-action="Register" class="btn btn-secondary">Registrarme</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

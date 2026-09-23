@@ -1,0 +1,31 @@
+@model ShipNetMvc.Models.EquipoDto
+@{
+    ViewData["Title"] = "Nuevo equipo";
+}
+
+<div class="card">
+    <div class="card-header">Nuevo equipo</div>
+    <div class="card-body">
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="Codigo">Código</label>
+                    <input class="form-control" asp-for="Codigo" placeholder="PC-14" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="MacAddress">MAC Address</label>
+                    <input class="form-control" asp-for="MacAddress" placeholder="AA:BB:CC:DD:EE:FF" />
+                    <div class="form-text">En la PC: <code>ipconfig /all</code> → "Dirección física", o abrir <code>/Home/Mac</code> desde esa PC.</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="Ubicacion">Ubicación</label>
+                    <input class="form-control" asp-for="Ubicacion" placeholder="Lab 2, fila 3" />
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
