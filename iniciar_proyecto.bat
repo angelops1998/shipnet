@@ -35,9 +35,16 @@ echo ===================================================
 echo          TODO EL SISTEMA ESTA EN EJECUCION
 echo ===================================================
 echo.
-echo - Web Principal: http://localhost:5176
-echo - API REST:      http://localhost:5220
+echo - Web Principal (Tu PC): http://localhost:5176
+echo - API REST Backend:      http://localhost:5220
 echo.
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4" /c:"Direcci"') do (
+    echo - Para entrar desde tu CELULAR / OTRA PC: http:%%a:5176
+)
+echo.
+echo ===================================================
 echo Abriendo navegador en la pagina principal...
 start http://localhost:5176
+echo.
+echo (Puedes cerrar esta ventana cuando quieras. Los servidores continuaran activos en sus respectivas ventanas).
 pause
