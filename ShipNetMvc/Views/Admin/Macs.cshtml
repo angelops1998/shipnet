@@ -1,0 +1,205 @@
+@model List<ShipNetMvc.Models.EstudianteConAsistenciasDto>
+@{
+    ViewData["Title"] = "Gestión de MACs - Estudiantes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1 text-dark">
+                <i class="bi bi-hdd-network me-2" style="color:var(--upds-azul)"></i>MACs de Estudiantes
+            </h2>
+            <p class="text-muted mb-0">Asigna y administra la dirección MAC de cada terminal por estudiante</p>
+        </div>
+        <div class="d-flex gap-2">
+            <input type="text" id="buscarEstudiante" class="form-control" placeholder="Buscar estudiante..." style="max-width:260px" />
+        </div>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-@(TempData["TipoMensaje"]?.ToString() == "success" ? "check-circle" : "x-circle") me-2"></i>
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-auto">
+            <div class="px-4 py-2 rounded-3 d-flex align-items-center gap-2 bg-light border">
+                <i class="bi bi-people" style="color:var(--upds-azul)"></i>
+                <div>
+                    <div class="fw-bold">@Model.Count</div>
+                    <small class="text-muted">Estudiantes</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="px-4 py-2 rounded-3 d-flex align-items-center gap-2 bg-light border">
+                <i class="bi bi-hdd-network text-success"></i>
+                <div>
+                    <div class="fw-bold text-success">@Model.Count(e => !string.IsNullOrEmpty(e.MacAddress))</div>
+                    <small class="text-muted">Con MAC asignada</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="px-4 py-2 rounded-3 d-flex align-items-center gap-2 bg-light border">
+                <i class="bi bi-hdd-network text-warning"></i>
+                <div>
+                    <div class="fw-bold text-warning">@Model.Count(e => string.IsNullOrEmpty(e.MacAddress))</div>
+                    <small class="text-muted">Sin MAC</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3">
+            <strong><i class="bi bi-table me-2" style="color:var(--upds-azul)"></i>Registro de MACs</strong>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="tablaEstudiantes">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Estudiante</th>
+                            <th>Carrera</th>
+                            <th>Semestre</th>
+                            <th>MAC Address</th>
+                            <th>Estado</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in Model)
+                        {
+                            <tr class="fila-estudiante">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--upds-azul),var(--upds-celeste));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem;flex-shrink:0">
+                                            @(e.Nombre.Length > 0 ? e.Nombre[0].ToString().ToUpper() : "?")
+                                        </div>
+                                        <div>
+                                            <span class="fw-semibold nombre-est">@e.Apellido, @e.Nombre</span>
+                                            <small class="d-block text-muted">CI: @e.CI @(!string.IsNullOrEmpty(e.Email) ? $" • {e.Email}" : "")</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">@(string.IsNullOrEmpty(e.Carrera) ? "—" : e.Carrera)</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">@(e.Semestre)°</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(e.MacAddress))
+                                    {
+                                        <code class="bg-light rounded px-2 py-1 small fw-semibold" style="color:var(--upds-azul)">@e.MacAddress</code>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>Sin asignar
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge @(string.IsNullOrEmpty(e.MacAddress) ? "bg-secondary-subtle text-secondary" : "bg-success-subtle text-success")">
+                                        @(string.IsNullOrEmpty(e.MacAddress) ? "Sin MAC" : "Registrada")
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalMac"
+                                            data-id="@e.Id"
+                                            data-nombre="@e.Nombre @e.Apellido"
+                                            data-mac="@(e.MacAddress ?? "")"
+                                            data-carrera="@(e.Carrera ?? "")"
+                                            data-semestre="@e.Semestre">
+                                        <i class="bi bi-pencil me-1"></i>Editar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal: Editar MAC -->
+<div class="modal fade" id="modalMac" tabindex="-1" aria-labelledby="modalMacLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom" style="background:linear-gradient(135deg,#002855,#004080)">
+                <h5 class="modal-title fw-bold text-white" id="modalMacLabel">
+                    <i class="bi bi-hdd-network me-2"></i>Asignar MAC
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-action="ActualizarMac" asp-controller="Admin">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="id" id="macEstudianteId" />
+                    <p class="fw-semibold mb-3" id="macNombreEstudiante"></p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">MAC Address del Terminal</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-hdd-network"></i></span>
+                            <input type="text" name="macAddress" id="macInputAddr"
+                                   class="form-control font-monospace"
+                                   placeholder="Ej. AA:BB:CC:DD:EE:FF"
+                                   pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" />
+                        </div>
+                        <div class="form-text">Formato: <code>AA:BB:CC:DD:EE:FF</code> — Deja vacío para quitar la asignación</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Carrera</label>
+                        <input type="text" name="carrera" id="macCarreraInput" class="form-control" placeholder="Ej. Ingeniería de Sistemas" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Semestre</label>
+                        <input type="number" name="semestre" id="macSemestreInput" class="form-control" min="1" max="20" value="1" />
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Fill modal with student data
+document.getElementById('modalMac').addEventListener('show.bs.modal', function(e) {
+    const btn = e.relatedTarget;
+    document.getElementById('macEstudianteId').value = btn.dataset.id;
+    document.getElementById('macNombreEstudiante').textContent = 'Estudiante: ' + btn.dataset.nombre;
+    document.getElementById('macInputAddr').value = btn.dataset.mac;
+    document.getElementById('macCarreraInput').value = btn.dataset.carrera;
+    document.getElementById('macSemestreInput').value = btn.dataset.semestre || 1;
+});
+
+// Search
+document.getElementById('buscarEstudiante').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('#tablaEstudiantes .fila-estudiante').forEach(row => {
+        const nombre = row.querySelector('.nombre-est').textContent.toLowerCase();
+        row.style.display = nombre.includes(q) ? '' : 'none';
+    });
+});
+</script>
+}

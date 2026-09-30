@@ -1,0 +1,107 @@
+@model List<ShipNetMvc.Models.EstudianteConAsistenciasDto>
+@{
+    ViewData["Title"] = "Directorio de Estudiantes";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-danger rounded-pill px-3 py-1">Administración</span>
+            <span class="badge bg-primary rounded-pill px-3 py-1">UPDS</span>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--upds-navy);"><i class="bi bi-people me-2"></i>Directorio de Estudiantes</h2>
+        <p class="text-muted mb-0">Control de alumnos registrados, carrera, semestre, materias por turno y asistencias acumuladas.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Macs" class="btn btn-outline-primary btn-sm"><i class="bi bi-hdd-network me-1"></i>Gestionar MACs</a>
+        <a asp-action="Index" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Volver al Panel</a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-shipnet align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudiante</th>
+                        <th>Carrera y Semestre</th>
+                        <th>Materias Inscritas este Semestre (Máx. 7)</th>
+                        <th>Total Asistencias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">No hay estudiantes registrados.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var e in Model)
+                        {
+                            var inscritas = e.Inscripciones ?? new List<ShipNetMvc.Models.InscripcionMateriaDto>();
+                            <tr>
+                                <td><strong>#@e.Id</strong></td>
+                                <td>
+                                    <strong>@e.Nombre @e.Apellido</strong>
+                                    <div class="small text-muted">CI: @e.CI @(!string.IsNullOrEmpty(e.Email) ? $" • {e.Email}" : "")</div>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(e.Carrera))
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                            <i class="bi bi-mortarboard me-1"></i>@e.Carrera
+                                        </span>
+                                        <div class="small text-muted mt-1">@e.Semestre° Semestre</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Sin carrera asignada</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (inscritas.Any())
+                                    {
+                                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                                            <span class="badge bg-info text-dark rounded-pill me-1">@inscritas.Count / 7</span>
+                                            @foreach (var ins in inscritas)
+                                            {
+                                                <span class="badge bg-body-secondary text-body border py-1 px-2" title="Docente: @ins.DocenteNombre">
+                                                    @(ins.MateriaNombre) 
+                                                    <span class="text-primary fw-bold">[@ins.Turno]</span>
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                    else if (e.Grupo != null && e.Grupo.Materia != null)
+                                    {
+                                        <span class="badge bg-info text-dark">@e.Grupo.Materia.Nombre</span>
+                                        <span class="badge bg-secondary">[@e.Grupo.Turno]</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-muted border">Sin materias inscritas</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill px-3 py-2">
+                                        <i class="bi bi-check-lg me-1"></i>@e.TotalAsistencias clases
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Volver al panel central
+    </a>
+</div>

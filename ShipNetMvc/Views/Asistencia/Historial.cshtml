@@ -1,0 +1,74 @@
+@model List<ShipNetMvc.Models.RegistroAsistenciaDto>
+@{
+    ViewData["Title"] = "Mis Asistencias";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2>Mis Asistencias</h2>
+        <p class="text-muted mb-0">Historial de registros de asistencia en el laboratorio de cómputo.</p>
+    </div>
+    <a asp-action="Marcar" class="btn btn-primary">Ir a marcar asistencia</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-sesion text-center py-3">
+            <h1 class="display-5 fw-bold text-primary mb-0">@Model.Count</h1>
+            <p class="text-muted mb-0">Clases asistidas</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card card-equipo h-100 d-flex justify-content-center p-3">
+            <h6 class="mb-1"><strong>Estado en la materia activa:</strong></h6>
+            <p class="mb-0 text-muted">
+                Tu asistencia es registrada automáticamente validando la dirección física (MAC) del equipo del laboratorio donde inicias sesión.
+            </p>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Aún no tienes registros de asistencia en ninguna sesión.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-shipnet align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Materia / Grupo</th>
+                    <th>Equipo utilizado</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@(r.SesionAsistencia?.Fecha.ToString("dd/MM/yyyy") ?? "—")</td>
+                        <td>@r.HoraRegistro.ToString(@"hh\:mm")</td>
+                        <td>
+                            <strong>@(r.SesionAsistencia?.Grupo?.Materia?.Nombre ?? "Materia")</strong>
+                            <span class="text-muted">(@(r.SesionAsistencia?.Grupo?.Nombre ?? "Grupo"))</span>
+                        </td>
+                        <td>
+                            <code>@(r.Equipo?.Codigo ?? "PC")</code>
+                            <small class="text-muted">(@(r.Equipo?.MacAddress ?? "—"))</small>
+                        </td>
+                        <td>
+                            <span class="badge @(r.Estado == "Presente" ? "bg-success" : "bg-warning text-dark")">
+                                @r.Estado
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -7,4 +7,7 @@ public class RegisterDto
     public string CI { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    public string? Carrera { get; set; }
+    public int Semestre { get; set; } = 1;
+    public string? MacAddress { get; set; }
 }

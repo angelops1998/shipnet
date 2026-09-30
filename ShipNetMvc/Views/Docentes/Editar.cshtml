@@ -1,0 +1,60 @@
+@model ShipNetMvc.Models.DocenteDto
+@{
+    ViewData["Title"] = "Editar Docente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4" style="max-width:680px">
+    <div class="d-flex align-items-center mb-4 gap-3">
+        <a href="@Url.Action("Index", "Docentes")" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-pencil me-2" style="color:var(--upds-azul)"></i>Editar Docente
+            </h2>
+            <p class="text-muted mb-0 small">@Model.Apellido, @Model.Nombre</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <form asp-action="Editar" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Nombre <span class="text-danger">*</span></label>
+                        <input asp-for="Nombre" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Apellido <span class="text-danger">*</span></label>
+                        <input asp-for="Apellido" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="docente@upds.edu.bo" />
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" placeholder="Ej. 70123456" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Especialidad</label>
+                        <input asp-for="Especialidad" class="form-control" placeholder="Ej. Redes, Sistemas..." />
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                    </button>
+                    <a href="@Url.Action("Index", "Docentes")" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

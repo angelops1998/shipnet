@@ -1,0 +1,64 @@
+@model List<ShipNetMvc.Models.EvaluacionDisponibleDto>
+@{
+    ViewData["Title"] = "Evaluaciones Disponibles";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+    <div>
+        <h2 class="mb-1"><i class="bi bi-journal-check me-2 text-primary"></i>Evaluaciones del Laboratorio</h2>
+        <p class="text-muted mb-0">Solo puedes rendir evaluaciones si estás conectado desde una PC autorizada del laboratorio.</p>
+    </div>
+    <span class="badge bg-body-secondary text-body border p-2 fs-6">
+        <i class="bi bi-display me-1 text-primary"></i> Tu equipo MAC: <code>@ViewBag.Mac</code>
+    </span>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info d-flex align-items-center gap-2">
+        <i class="bi bi-info-circle fs-4"></i>
+        <div>No hay evaluaciones activas programadas en este momento para tus materias.</div>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var e in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100 border">
+                    <div class="card-header bg-body-tertiary d-flex justify-content-between align-items-center py-2">
+                        <span class="fw-semibold text-truncate" style="max-width: 70%;">@(e.Grupo?.Materia?.Nombre ?? "Materia")</span>
+                        <span class="badge bg-primary"><i class="bi bi-clock me-1"></i>@e.DuracionMinutos min</span>
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between p-3">
+                        <div>
+                            <h5 class="card-title text-primary mb-2">@e.Titulo</h5>
+                            <p class="card-text text-muted small mb-3">
+                                <div><i class="bi bi-people me-1"></i> <strong>Grupo:</strong> @(e.Grupo?.Nombre ?? "Grupo")</div>
+                                <div><i class="bi bi-calendar-event me-1"></i> <strong>Horario:</strong> @e.FechaInicio.ToString("HH:mm") a @e.FechaFin.ToString("HH:mm")</div>
+                            </p>
+                        </div>
+                        <div class="mt-2 pt-3 border-top">
+                            @if (e.YaRendido)
+                            {
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-success fw-bold small"><i class="bi bi-check-circle me-1"></i>Completada</span>
+                                    <span class="badge @(e.PuntajeObtenido >= 51 ? "bg-success" : "bg-danger") fs-6">
+                                        @(e.PuntajeObtenido?.ToString("0.0") ?? "—") / 100
+                                    </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <a asp-action="Rendir" asp-route-id="@e.Id" class="btn btn-primary w-100">
+                                    <i class="bi bi-pencil me-1"></i> @(e.IntentoPendienteId.HasValue ? "Continuar examen" : "Iniciar evaluación")
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,34 +1,96 @@
 @model List<ShipNetMvc.Models.MateriaDto>
 @{
     ViewData["Title"] = "Materias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var porCarrera = Model.GroupBy(m => m.Carrera?.Nombre ?? "Sin Carrera Asignada")
+                          .OrderBy(g => g.Key).ToList();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Materias</h2>
-    <a asp-action="Crear" class="btn btn-primary">Nueva materia</a>
-</div>
+<div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="fw-bold mb-1 text-dark">
+                <i class="bi bi-book me-2" style="color:var(--upds-azul)"></i>Materias
+            </h2>
+            <p class="text-muted mb-0">Catálogo de materias por carrera</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Index", "Carreras")" class="btn btn-outline-primary d-flex align-items-center gap-2">
+                <i class="bi bi-mortarboard"></i> Gestionar Carreras
+            </a>
+            <a href="@Url.Action("Crear", "Materias")" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle"></i> Nueva Materia
+            </a>
+        </div>
+    </div>
 
-<div class="table-responsive">
-    <table class="table table-shipnet align-middle">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var m in Model)
-            {
-                <tr>
-                    <td>@m.Codigo</td>
-                    <td>@m.Nombre</td>
-                    <td class="text-end">
-                        <a asp-action="Eliminar" asp-route-id="@m.Id" class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Eliminar @m.Nombre?')">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show shadow-sm" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-3 mb-4">
+        <div class="col-auto">
+            <div class="px-4 py-2 rounded-3 d-flex align-items-center gap-2 bg-light border">
+                <i class="bi bi-book" style="color:var(--upds-azul)"></i>
+                <div>
+                    <div class="fw-bold">@Model.Count</div>
+                    <small class="text-muted">Total Materias</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var grupo in porCarrera)
+    {
+        <div class="mb-4">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div style="width:4px;height:22px;background:var(--upds-azul);border-radius:2px"></div>
+                <h6 class="fw-bold mb-0 text-dark">@grupo.Key</h6>
+                <span class="badge rounded-pill" style="background:var(--upds-azul-claro)">@grupo.Count()</span>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Código</th>
+                                    <th>Nombre de la Materia</th>
+                                    <th>Semestre</th>
+                                    <th class="text-end pe-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var m in grupo.OrderBy(x => x.Semestre).ThenBy(x => x.Nombre))
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <code class="bg-light rounded px-2 py-1 small">@m.Codigo</code>
+                                        </td>
+                                        <td class="fw-semibold">@m.Nombre</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">@(m.Semestre)° Semestre</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a asp-action="Editar" asp-route-id="@m.Id"
+                                               class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-action="Eliminar" asp-route-id="@m.Id"
+                                               class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('¿Eliminar la materia @m.Nombre?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

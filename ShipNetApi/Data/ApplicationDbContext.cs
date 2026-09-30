@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShipNetApi.Models;
 
@@ -11,6 +11,7 @@ namespace ShipNetApi.Data
         {
         }
 
+        public DbSet<Carrera> Carreras => Set<Carrera>();
         public DbSet<Estudiante> Estudiantes => Set<Estudiante>();
         public DbSet<Docente> Docentes => Set<Docente>();
         public DbSet<Materia> Materias => Set<Materia>();
@@ -20,5 +21,6 @@ namespace ShipNetApi.Data
         public DbSet<RegistroAsistencia> RegistrosAsistencia => Set<RegistroAsistencia>();
         public DbSet<Evaluacion> Evaluaciones => Set<Evaluacion>();
         public DbSet<IntentoEvaluacion> IntentosEvaluacion => Set<IntentoEvaluacion>();
+        public DbSet<Inscripcion> Inscripciones => Set<Inscripcion>();
     }
 }

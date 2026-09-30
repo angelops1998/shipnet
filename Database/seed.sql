@@ -9,7 +9,8 @@ INSERT INTO materias (Nombre, Codigo) VALUES
 INSERT INTO equipos (Codigo, MacAddress, Ubicacion) VALUES
 ('PC-SERVIDOR', '00:00:00:00:00:00', 'PC donde corre la app (pruebas en localhost)'),
 ('PC-01', 'AA:BB:CC:DD:EE:01', 'Lab 2, fila 1'),
-('PC-02', 'AA:BB:CC:DD:EE:02', 'Lab 2, fila 1');
+('PC-02', '04:D9:F5:7C:8D:EA', 'Lab 2, fila 1 (PC Secundaria de pruebas)');
+
 
 -- 3. Insertar Grupos
 INSERT INTO grupos (Nombre, MateriaId, DocenteId) VALUES

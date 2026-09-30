@@ -1,54 +1,224 @@
 @{
     ViewData["Title"] = "Inicio";
+    var modActual = ShipNetMvc.Models.UpdsCalendario.ModuloActual;
 }
 
-<div class="text-center my-5">
-    <h1 style="color: var(--bs-primary);">ShipNet</h1>
-    <p class="lead">Asistencia automática y evaluaciones seguras en el laboratorio.</p>
+<!-- UPDS Hero Header -->
+<div class="upds-hero mb-4">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="brand-badge">UPDS BOLIVIA</span>
+                <span class="badge bg-light text-dark rounded-pill">Gestión Académica Presencial 2026</span>
+            </div>
+            <h1 class="display-5 fw-bold mb-2">ShipNet &mdash; Control de Laboratorios</h1>
+            <p class="lead text-white-50 mb-3" style="font-size: 1.1rem;">
+                Sistema modular universitario de control de asistencia automática y exámenes protegidos mediante validación de dirección MAC por hardware en red local (LAN).
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-controller="Admin" asp-action="Calendario" class="btn btn-sm btn-upds-cyan">
+                    📅 Ver Calendario de Módulos 2026
+                </a>
+                @if (User.IsInRole("Estudiante"))
+                {
+                    <a asp-controller="Asistencia" asp-action="Marcar" class="btn btn-sm btn-light">
+                        ✓ Marcar mi asistencia
+                    </a>
+                }
+                else if (User.IsInRole("Docente"))
+                {
+                    <a asp-controller="Asistencia" asp-action="Abrir" class="btn btn-sm btn-light">
+                        + Abrir sesión de clase
+                    </a>
+                }
+                else if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-sm btn-light">
+                        Ir al Panel de Administración
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-end">
+            <div class="card p-3 text-dark text-start bg-white shadow" style="border-radius: 16px;">
+                <span class="badge bg-primary mb-1">MÓDULO EN CURSO</span>
+                <h5 class="fw-bold text-primary mb-0">@modActual.Nombre</h5>
+                <div class="text-muted small">@modActual.Mes &bull; Presencial</div>
+                <hr class="my-2" />
+                <div class="small">
+                    <strong>Inicio:</strong> @modActual.FechaInicio.ToString("dd/MM/yyyy")<br />
+                    <strong>Fin:</strong> @modActual.FechaFin.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row g-3 justify-content-center">
+<div class="row g-4 justify-content-center">
     @if (User.IsInRole("Docente"))
     {
         <div class="col-md-4">
-            <div class="card card-sesion">
-                <div class="card-header">Docente</div>
-                <div class="card-body">
-                    <p class="card-text">Abre sesiones de asistencia y revisa quién marcó.</p>
-                    <a asp-controller="Asistencia" asp-action="Index" class="btn btn-primary btn-sm">Ir a asistencia</a>
+            <div class="card card-sesion h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-primary">📋 Asistencia Modular</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Abre la lista de clase para tu materia modular activa del mes, verifica en tiempo real los alumnos conectados desde PCs autorizadas y descarga el acta a Excel.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Asistencia" asp-action="Index" class="btn btn-primary w-100">Gestionar Asistencias</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-evaluacion h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-warning">📝 Evaluaciones Seguras</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Crea exámenes dinámicos con preguntas de selección múltiple (A/B/C/D), autocalificación inmediata y exportación de notas oficiales a planilla.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Evaluaciones" asp-action="Index" class="btn btn-warning text-dark w-100">Gestionar Exámenes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-modular h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-success">📚 Mis Materias Modulares</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Revisa las materias que tienes asignadas en cada módulo del año. Activa o desactiva la materia en curso con un solo clic al cambiar de mes.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Grupos" asp-action="Index" class="btn btn-outline-success w-100">Ver mis asignaciones</a>
+                    </div>
                 </div>
             </div>
         </div>
     }
+
     @if (User.IsInRole("Estudiante"))
     {
         <div class="col-md-4">
-            <div class="card card-sesion">
-                <div class="card-header">Estudiante</div>
-                <div class="card-body">
-                    <p class="card-text">Marca tu asistencia desde una PC autorizada del laboratorio.</p>
-                    <a asp-controller="Asistencia" asp-action="Marcar" class="btn btn-primary btn-sm">Marcar asistencia</a>
+            <div class="card card-sesion h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-primary">✓ Marcar Asistencia</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Registra tu presencia en la clase modular de este mes validando tu terminal física del laboratorio de cómputo por hardware MAC.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Asistencia" asp-action="Marcar" class="btn btn-primary w-100">Marcar presente ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-equipo h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-info">📊 Mis Asistencias</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Consulta tu porcentaje de asistencia en la materia mensual y los equipos del laboratorio que utilizaste.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Asistencia" asp-action="Historial" class="btn btn-outline-primary w-100">Ver mi historial</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-evaluacion h-100 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-warning">📝 Exámenes del Módulo</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Rinde las evaluaciones activas programadas por tu docente con preguntas de selección múltiple y temporizador regresivo.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Evaluaciones" asp-action="Disponibles" class="btn btn-warning text-dark w-100">Ver exámenes disponibles</a>
+                    </div>
                 </div>
             </div>
         </div>
     }
+
     @if (User.IsInRole("Admin"))
     {
-        <div class="col-md-4">
-            <div class="card card-equipo">
-                <div class="card-header">Administrador</div>
-                <div class="card-body">
-                    <p class="card-text">Gestiona equipos, materias y grupos.</p>
-                    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary btn-sm">Ir a administración</a>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-top border-4 border-primary">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-primary">⚙️ Panel Central de Administración</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Supervisión de todo el campus de laboratorios: asignaciones modulares docente-materia, terminales y direcciones MAC, auditoría global de asistencias y actas de exámenes.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Admin" asp-action="Index" class="btn btn-primary w-100">Abrir Panel de Administración</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-top border-4 border-info">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-info">📅 Calendario Modular UPDS 2026</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="card-text text-muted small">
+                            Consulta la planificación de los 12 módulos de la gestión 2026, fechas de inicio y conclusión de materias, feriados y descansos pedagógicos oficiales.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-controller="Admin" asp-action="Calendario" class="btn btn-outline-info w-100">Ver Calendario Completo</a>
+                    </div>
                 </div>
             </div>
         </div>
     }
+
     @if (User.Identity == null || !User.Identity.IsAuthenticated)
     {
-        <div class="col-md-5 text-center">
-            <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Iniciar sesión</a>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-secondary">Registrarme</a>
+        <div class="col-md-7 text-center py-3">
+            <div class="card p-4 shadow-sm border-top border-4 border-primary">
+                <h4 class="fw-bold mb-2 text-primary">Acceso al Sistema Modular de Laboratorios</h4>
+                <p class="text-muted small mb-4">Inicia sesión con tus credenciales de la Universidad Privada Domingo Savio o regístrate como estudiante para acceder desde este equipo.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary px-4">Iniciar sesión</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-secondary px-4">Registrar cuenta de estudiante</a>
+                </div>
+            </div>
         </div>
     }
 </div>

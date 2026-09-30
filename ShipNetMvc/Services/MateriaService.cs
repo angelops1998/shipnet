@@ -14,10 +14,30 @@ public class MateriaService : IMateriaService
         return materias ?? new List<MateriaDto>();
     }
 
+    // GET api/Materias/{id}
+    public async Task<MateriaDto?> GetByIdAsync(int id)
+    {
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<MateriaDto>($"Materias/{id}");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // POST api/Materias
     public async Task<bool> CrearAsync(MateriaDto materia)
     {
         var respuesta = await _httpClient.PostAsJsonAsync("Materias", materia);
+        return respuesta.IsSuccessStatusCode;
+    }
+
+    // PUT api/Materias/{id}
+    public async Task<bool> ActualizarAsync(int id, MateriaDto materia)
+    {
+        var respuesta = await _httpClient.PutAsJsonAsync($"Materias/{id}", materia);
         return respuesta.IsSuccessStatusCode;
     }
 
@@ -28,3 +48,4 @@ public class MateriaService : IMateriaService
         return respuesta.IsSuccessStatusCode;
     }
 }
+

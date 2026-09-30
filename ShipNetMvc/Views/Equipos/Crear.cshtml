@@ -1,31 +1,57 @@
 @model ShipNetMvc.Models.EquipoDto
 @{
-    ViewData["Title"] = "Nuevo equipo";
+    ViewData["Title"] = "Registrar Terminal de Laboratorio";
+    var macActual = ViewBag.MacActual as string ?? "";
 }
 
-<div class="card">
-    <div class="card-header">Nuevo equipo</div>
-    <div class="card-body">
-        <form method="post">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="Codigo">Código</label>
-                    <input class="form-control" asp-for="Codigo" placeholder="PC-14" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="MacAddress">MAC Address</label>
-                    <input class="form-control" asp-for="MacAddress" placeholder="AA:BB:CC:DD:EE:FF" />
-                    <div class="form-text">En la PC: <code>ipconfig /all</code> → "Dirección física", o abrir <code>/Home/Mac</code> desde esa PC.</div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="Ubicacion">Ubicación</label>
-                    <input class="form-control" asp-for="Ubicacion" placeholder="Lab 2, fila 3" />
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-top border-4 border-info">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-info text-dark">Hardware UPDS</span>
+                    <h5 class="fw-bold mb-0 text-primary">Registrar Computadora de Laboratorio</h5>
                 </div>
             </div>
-            <div class="mt-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <div class="card-body p-4">
+                @if (!string.IsNullOrEmpty(macActual) && macActual != "00:00:00:00:00:00")
+                {
+                    <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <strong>📡 MAC detectada de este terminal:</strong> <code class="fw-bold fs-6">@macActual</code>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('macInput').value = '@macActual'">
+                            Usar esta MAC
+                        </button>
+                    </div>
+                }
+
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="Codigo">Código de Equipo</label>
+                            <input class="form-control" asp-for="Codigo" placeholder="Ej: PC-03, LAB1-PC05" required />
+                            <div class="form-text">Identificador visible de la máquina en el laboratorio.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="MacAddress">Dirección Física (MAC Address)</label>
+                            <input class="form-control" id="macInput" asp-for="MacAddress" value="@macActual" placeholder="04:D9:F5:7C:8D:EA" required />
+                            <div class="form-text">Formato XX:XX:XX:XX:XX:XX. Validado en red mediante ARP.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" asp-for="Ubicacion">Ubicación / Laboratorio</label>
+                            <input class="form-control" asp-for="Ubicacion" placeholder="Ej: Laboratorio de Redes - Fila 2, PC 3" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4">Guardar Equipo</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>

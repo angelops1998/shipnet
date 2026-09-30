@@ -11,7 +11,15 @@ namespace ShipNetMvc.Controllers;
 public class AccountController : Controller
 {
     private readonly IAuthService _authService;
-    public AccountController(IAuthService authService) => _authService = authService;
+    private readonly ICarreraService _carreraService;
+    private readonly INetworkService _networkService;
+
+    public AccountController(IAuthService authService, ICarreraService carreraService, INetworkService networkService)
+    {
+        _authService = authService;
+        _carreraService = carreraService;
+        _networkService = networkService;
+    }
 
     public IActionResult Login() => View();
 
@@ -30,21 +38,42 @@ public class AccountController : Controller
         return View(vm);
     }
 
-    public IActionResult Register() => View();
+    public async Task<IActionResult> Register()
+    {
+        var mac = _networkService.ObtenerMacCliente(HttpContext);
+        ViewBag.Mac = mac;
+        ViewBag.Carreras = await _carreraService.GetCarrerasAsync();
+        return View(new RegisterViewModel { MacAddress = mac });
+    }
 
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel vm)
     {
+        var mac = _networkService.ObtenerMacCliente(HttpContext);
+        ViewBag.Mac = mac;
+
+        if (string.IsNullOrWhiteSpace(vm.MacAddress))
+        {
+            vm.MacAddress = mac;
+        }
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Carreras = await _carreraService.GetCarrerasAsync();
+            return View(vm);
+        }
+
         var (respuesta, error) = await _authService.RegisterAsync(vm);
         if (respuesta == null)
         {
-            TempData["Mensaje"] = "No se pudo registrar: " + error;
+            ViewBag.Carreras = await _carreraService.GetCarrerasAsync();
+            TempData["Mensaje"] = error ?? "No se pudo completar el registro.";
             TempData["TipoMensaje"] = "danger";
             return View(vm);
         }
 
         await IniciarSesion(respuesta);
-        TempData["Mensaje"] = "Registro exitoso. ¡Bienvenido!";
+        TempData["Mensaje"] = "Registro exitoso. ¡Bienvenido a UPDS ShipNet!";
         TempData["TipoMensaje"] = "success";
         return RedirectToAction("Index", "Home");
     }
