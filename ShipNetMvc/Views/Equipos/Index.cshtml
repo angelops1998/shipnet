@@ -1,36 +1,106 @@
 @model List<ShipNetMvc.Models.EquipoDto>
 @{
-    ViewData["Title"] = "Equipos";
+    ViewData["Title"] = "Equipos del Laboratorio";
+    var macActual = ViewBag.MacActual as string ?? "00:00:00:00:00:00";
+    var yaRegistrada = Model.Any(e => e.MacAddress.Equals(macActual, StringComparison.OrdinalIgnoreCase));
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Equipos del laboratorio</h2>
-    <a asp-action="Crear" class="btn btn-primary">Nuevo equipo</a>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-primary rounded-pill px-3 py-1">Seguridad Hardware ARP</span>
+            <span class="badge bg-info text-dark rounded-pill px-3 py-1">Control MAC</span>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--upds-navy);">Equipos y Terminales de Laboratorio</h2>
+        <p class="text-muted mb-0">Dispositivos autorizados físicamente para marcación de asistencias y exámenes.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Crear" class="btn btn-primary btn-sm">+ Registrar Nuevo Equipo</a>
+    </div>
+</div>
+
+<!-- Detección de terminal actual -->
+<div class="card p-3 mb-4 border-start border-4 @(yaRegistrada ? "border-success bg-light" : "border-warning bg-light") shadow-sm">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+            <span class="badge @(yaRegistrada ? "bg-success" : "bg-warning text-dark") mb-1">
+                @(yaRegistrada ? "✓ TERMINAL AUTORIZADA" : "⚠ TERMINAL NO REGISTRADA")
+            </span>
+            <div class="fw-bold text-dark fs-5">
+                Dirección MAC física de tu equipo: <code class="text-primary fs-5">@macActual</code>
+            </div>
+            <div class="text-muted small">
+                @if (yaRegistrada)
+                {
+                    <span>Este dispositivo coincide con un equipo autorizado en el catálogo.</span>
+                }
+                else
+                {
+                    <span>Este dispositivo no está registrado. Si es una PC de laboratorio, regístrala con el botón a la derecha.</span>
+                }
+            </div>
+        </div>
+        <div>
+            @if (!yaRegistrada)
+            {
+                <a asp-action="Crear" class="btn btn-sm btn-upds-cyan">+ Autorizar esta PC ahora</a>
+            }
+        </div>
+    </div>
 </div>
 
 <div class="table-responsive">
     <table class="table table-shipnet align-middle">
         <thead>
             <tr>
-                <th>Código</th>
-                <th>MAC</th>
-                <th>Ubicación</th>
-                <th></th>
+                <th>Código Equipo</th>
+                <th>Dirección MAC Física</th>
+                <th>Ubicación / Sala</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var e in Model)
+            @if (!Model.Any())
             {
                 <tr>
-                    <td>@e.Codigo</td>
-                    <td><code>@e.MacAddress</code></td>
-                    <td>@e.Ubicacion</td>
-                    <td class="text-end">
-                        <a asp-action="Eliminar" asp-route-id="@e.Id" class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Eliminar @e.Codigo?')">Eliminar</a>
-                    </td>
+                    <td colspan="5" class="text-center text-muted py-4">No hay equipos registrados en el catálogo.</td>
                 </tr>
+            }
+            else
+            {
+                @foreach (var e in Model)
+                {
+                    var esEste = e.MacAddress.Equals(macActual, StringComparison.OrdinalIgnoreCase);
+                    <tr class="@(esEste ? "table-info" : "")">
+                        <td>
+                            <strong>@e.Codigo</strong>
+                            @if (esEste)
+                            {
+                                <span class="badge bg-success ms-1" style="font-size: 0.65rem;">Esta PC</span>
+                            }
+                        </td>
+                        <td>
+                            <code class="fw-bold text-dark">@e.MacAddress</code>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">@(e.Ubicacion ?? "Laboratorio")</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success rounded-pill px-3 py-1">Autorizado</span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Editar" asp-route-id="@e.Id" class="btn btn-secondary btn-sm me-1">Editar</a>
+                            <a asp-action="Eliminar" asp-route-id="@e.Id" class="btn btn-outline-danger btn-sm"
+                               onclick="return confirm('¿Eliminar el equipo @e.Codigo?')">Eliminar</a>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Volver al panel central</a>
 </div>

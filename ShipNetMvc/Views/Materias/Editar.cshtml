@@ -1,0 +1,55 @@
+@model ShipNetMvc.Models.MateriaDto
+@{
+    ViewData["Title"] = "Editar Materia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4" style="max-width:680px">
+    <div class="d-flex align-items-center mb-4 gap-3">
+        <a href="@Url.Action("Index", "Materias")" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-pencil me-2" style="color:var(--upds-azul)"></i>Editar Materia
+        </h2>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <form asp-action="Editar" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Carrera</label>
+                    <select asp-for="CarreraId" asp-items="ViewBag.Carreras" class="form-select">
+                        <option value="">— Sin carrera asignada —</option>
+                    </select>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small text-muted">Código <span class="text-danger">*</span></label>
+                        <input asp-for="Codigo" class="form-control" required />
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold small text-muted">Nombre <span class="text-danger">*</span></label>
+                        <input asp-for="Nombre" class="form-control" required />
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small text-muted">Semestre</label>
+                    <select asp-for="Semestre" class="form-select">
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@i° Semestre</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                    </button>
+                    <a href="@Url.Action("Index", "Materias")" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

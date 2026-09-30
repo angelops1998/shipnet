@@ -5,13 +5,20 @@
 <div class="card">
     <div class="card-header">Abrir sesión de asistencia</div>
     <div class="card-body">
-        <form method="post">
-            <div class="mb-3">
-                <label class="form-label" for="grupoId">Grupo</label>
-                <select class="form-select" id="grupoId" name="grupoId" asp-items="ViewBag.Grupos"></select>
+        <form method="post" asp-action="Abrir">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="grupoId">Grupo</label>
+                    <select class="form-select" id="grupoId" name="grupoId" asp-items="ViewBag.Grupos" required>
+                        <option value="">-- Selecciona un grupo --</option>
+                    </select>
+                    <div class="form-text">La sesión se abrirá con la fecha de hoy y la hora actual.</div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Abrir</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Abrir sesión</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
         </form>
     </div>
 </div>

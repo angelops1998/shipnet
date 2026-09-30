@@ -1,0 +1,72 @@
+@model List<ShipNetMvc.Models.EvaluacionDto>
+@{
+    ViewData["Title"] = "Evaluaciones";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
+    <div>
+        <h2 class="mb-1"><i class="bi bi-journal-check me-2 text-primary"></i>Evaluaciones Programadas</h2>
+        <p class="text-muted mb-0">Gestión de exámenes y pruebas con restricción por equipos de laboratorio.</p>
+    </div>
+    <a asp-action="Crear" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i> Programar nueva evaluación
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-shipnet align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Materia / Grupo</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Duración</th>
+                        <th>Intentos</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">No tienes evaluaciones programadas todavía.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var e in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@e.Titulo</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-body-secondary text-body border">@(e.Grupo?.Materia?.Nombre ?? "Materia")</span>
+                                    <span class="small text-muted ms-1">(@(e.Grupo?.Nombre ?? "Grupo"))</span>
+                                </td>
+                                <td>@e.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@e.FechaFin.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td><span class="badge bg-info text-dark">@e.DuracionMinutos min</span></td>
+                                <td>
+                                    <span class="badge bg-secondary">@e.IntentosEvaluacion.Count entregas</span>
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Detalle" asp-route-id="@e.Id" class="btn btn-outline-primary btn-sm me-1" title="Ver notas y preguntas">
+                                        <i class="bi bi-eye me-1"></i> Ver notas
+                                    </a>
+                                    <a asp-action="Eliminar" asp-route-id="@e.Id" class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('¿Seguro que deseas eliminar la evaluación @e.Titulo?')" title="Eliminar evaluación">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@model ShipNetMvc.Models.CarreraDto
+@{
+    ViewData["Title"] = "Editar Carrera";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var facultades = new[] {
+        "Facultad de Ingeniería y Tecnología",
+        "Facultad de Ciencias Empresariales",
+        "Facultad de Ciencias Jurídicas y Políticas",
+        "Facultad de Humanidades y Ciencias de la Educación",
+        "Facultad de Ciencias de la Salud"
+    };
+}
+
+<div class="container py-4" style="max-width:680px">
+    <div class="d-flex align-items-center mb-4 gap-3">
+        <a href="@Url.Action("Index", "Carreras")" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-pencil me-2" style="color:var(--upds-azul)"></i>Editar Carrera
+            </h2>
+            <p class="text-muted mb-0 small">@Model.Nombre</p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <form asp-action="Editar" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Nombre de la Carrera <span class="text-danger">*</span></label>
+                    <input asp-for="Nombre" class="form-control" required />
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Código <span class="text-danger">*</span></label>
+                        <input asp-for="Codigo" class="form-control text-uppercase" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Duración (semestres)</label>
+                        <input asp-for="Duracion" type="number" class="form-control" min="1" max="20" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Facultad <span class="text-danger">*</span></label>
+                    <select asp-for="Facultad" class="form-select" required>
+                        <option value="">— Seleccione —</option>
+                        @foreach (var f in facultades)
+                        {
+                            <option value="@f" selected="@(Model.Facultad == f ? "selected" : null)">@f</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        <input asp-for="Activa" class="form-check-input" type="checkbox" />
+                        <label class="form-check-label fw-semibold small text-muted">Carrera activa</label>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                    </button>
+                    <a href="@Url.Action("Index", "Carreras")" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

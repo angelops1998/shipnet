@@ -1,0 +1,110 @@
+@model ShipNetMvc.Models.CrearDocenteFormModel
+@{
+    ViewData["Title"] = "Agregar Docente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4" style="max-width:680px">
+    <div class="d-flex align-items-center mb-4 gap-3">
+        <a href="@Url.Action("Index", "Docentes")" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-person-plus me-2" style="color:var(--upds-azul)"></i>Agregar Docente
+            </h2>
+            <p class="text-muted mb-0 small">El docente recibirá acceso al sistema con los datos ingresados</p>
+        </div>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show shadow-sm mb-4" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3">
+            <strong><i class="bi bi-form me-2" style="color:var(--upds-azul)"></i>Datos del Docente</strong>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Crear" method="post" autocomplete="off">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Nombre <span class="text-danger">*</span></label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Ej. Juan Carlos" required />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Apellido <span class="text-danger">*</span></label>
+                        <input asp-for="Apellido" class="form-control" placeholder="Ej. Mamani Quispe" required />
+                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Email institucional <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="docente@upds.edu.bo" required />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small text-muted">Contraseña temporal <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Mínimo 8 caracteres" required />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePass(this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                    <div class="form-text">El docente debe cambiar su contraseña al primer inicio de sesión.</div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Teléfono / Celular</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input asp-for="Telefono" class="form-control" placeholder="Ej. 70123456" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Especialidad / Área</label>
+                        <input asp-for="Especialidad" class="form-control" placeholder="Ej. Ingeniería de Sistemas" />
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-check-circle me-2"></i>Registrar Docente
+                    </button>
+                    <a href="@Url.Action("Index", "Docentes")" class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function togglePass(btn) {
+    const input = btn.previousElementSibling;
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+</script>
+}

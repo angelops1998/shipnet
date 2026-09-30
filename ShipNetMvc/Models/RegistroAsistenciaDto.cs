@@ -10,4 +10,6 @@ public class RegistroAsistenciaDto
     public string Estado { get; set; } = "Presente";
     public EstudianteDto Estudiante { get; set; } = new();
     public EquipoDto Equipo { get; set; } = new();
+    public SesionAsistenciaDto? SesionAsistencia { get; set; }
 }
+

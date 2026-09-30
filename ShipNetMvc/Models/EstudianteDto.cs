@@ -6,4 +6,6 @@ public class EstudianteDto
     public string Nombre { get; set; } = string.Empty;
     public string Apellido { get; set; } = string.Empty;
     public string CI { get; set; } = string.Empty;
+    public int? GrupoId { get; set; }
+    public GrupoDto? Grupo { get; set; }
 }

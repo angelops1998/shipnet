@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ShipNetApi.Models
@@ -11,7 +11,9 @@ namespace ShipNetApi.Models
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public int DuracionMinutos { get; set; }
+        public string? PreguntasJson { get; set; }
         public Grupo Grupo { get; set; } = null!;
         public ICollection<IntentoEvaluacion> IntentosEvaluacion { get; set; } = new List<IntentoEvaluacion>();
     }
+
 }

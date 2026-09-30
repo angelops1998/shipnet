@@ -14,10 +14,30 @@ public class EquipoService : IEquipoService
         return equipos ?? new List<EquipoDto>();
     }
 
+    // GET api/Equipos/{id}
+    public async Task<EquipoDto?> GetByIdAsync(int id)
+    {
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<EquipoDto>($"Equipos/{id}");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // POST api/Equipos
     public async Task<bool> CrearAsync(EquipoDto equipo)
     {
         var respuesta = await _httpClient.PostAsJsonAsync("Equipos", equipo);
+        return respuesta.IsSuccessStatusCode;
+    }
+
+    // PUT api/Equipos/{id}
+    public async Task<bool> ActualizarAsync(int id, EquipoDto equipo)
+    {
+        var respuesta = await _httpClient.PutAsJsonAsync($"Equipos/{id}", equipo);
         return respuesta.IsSuccessStatusCode;
     }
 
@@ -28,3 +48,4 @@ public class EquipoService : IEquipoService
         return respuesta.IsSuccessStatusCode;
     }
 }
+

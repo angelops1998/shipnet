@@ -1,39 +1,134 @@
 @model ShipNetMvc.ViewModels.RegisterViewModel
 @{
-    ViewData["Title"] = "Registro de estudiante";
+    ViewData["Title"] = "Registro de Estudiante";
+    var carreras = ViewBag.Carreras as List<ShipNetMvc.Models.CarreraDto> ?? new List<ShipNetMvc.Models.CarreraDto>();
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Registro de estudiante</div>
-            <div class="card-body">
+<div class="row justify-content-center py-3">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-info text-dark rounded-pill px-3 py-1 mb-2">Admisión UPDS</span>
+                    <h4 class="fw-bold mb-0"><i class="bi bi-person-plus me-2"></i>Registro de Estudiante</h4>
+                    <small class="text-white-50">Crea tu cuenta institucional para control de asistencias y exámenes</small>
+                </div>
+                <div class="d-none d-sm-block fs-1 opacity-50">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+            </div>
+            <div class="card-body p-4">
                 <form method="post">
-                    <div class="row g-3">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3"></div>
+
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                        <i class="bi bi-person-lines-fill me-1"></i> 1. Datos Personales y Acceso
+                    </h6>
+                    <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="Nombre">Nombre</label>
-                            <input class="form-control" asp-for="Nombre" />
+                            <label class="form-label fw-semibold" asp-for="Nombre">Nombres</label>
+                            <input class="form-control" asp-for="Nombre" placeholder="Ej: Juan Carlos" required />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="Apellido">Apellido</label>
-                            <input class="form-control" asp-for="Apellido" />
+                            <label class="form-label fw-semibold" asp-for="Apellido">Apellidos</label>
+                            <input class="form-control" asp-for="Apellido" placeholder="Ej: Perez Rocha" required />
+                            <span asp-validation-for="Apellido" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="CI">CI</label>
-                            <input class="form-control" asp-for="CI" />
+                            <label class="form-label fw-semibold" asp-for="CI">Carnet de Identidad (C.I.)</label>
+                            <input class="form-control" asp-for="CI" placeholder="Ej: 8943210" required />
+                            <span asp-validation-for="CI" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" asp-for="Email">Correo</label>
-                            <input class="form-control" asp-for="Email" type="email" />
+                            <label class="form-label fw-semibold" asp-for="Email">Correo Electrónico</label>
+                            <input class="form-control" asp-for="Email" type="email" placeholder="ejemplo@gmail.com" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label" asp-for="Password">Contraseña</label>
-                            <input class="form-control" asp-for="Password" type="password" />
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" asp-for="Password">Contraseña</label>
+                            <input class="form-control" asp-for="Password" type="password" placeholder="Mínimo 4 caracteres" required />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
                     </div>
-                    <div class="mt-4 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">Registrarme</button>
-                        <a asp-action="Login" class="btn btn-secondary">Ya tengo cuenta</a>
+
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                        <i class="bi bi-mortarboard me-1"></i> 2. Registro Académico (Carrera y Semestre)
+                    </h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold" asp-for="Carrera">Carrera Universitaria</label>
+                            <select class="form-select" asp-for="Carrera" required>
+                                <option value="">-- Selecciona tu Carrera en UPDS --</option>
+                                @if (carreras.Any())
+                                {
+                                    @foreach (var grupoFacultad in carreras.GroupBy(c => c.Facultad).OrderBy(g => g.Key))
+                                    {
+                                        <optgroup label="🏛️ @grupoFacultad.Key">
+                                            @foreach (var c in grupoFacultad.OrderBy(x => x.Nombre))
+                                            {
+                                                <option value="@c.Nombre">@c.Nombre (@c.Codigo)</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
+                                    <option value="Ingeniería en Redes y Telecomunicaciones">Ingeniería en Redes y Telecomunicaciones</option>
+                                    <option value="Derecho">Derecho</option>
+                                    <option value="Administración de Empresas">Administración de Empresas</option>
+                                    <option value="Contaduría Pública">Contaduría Pública</option>
+                                    <option value="Medicina">Medicina</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Carrera" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold" asp-for="Semestre">Semestre Actual</label>
+                            <select class="form-select" asp-for="Semestre" required>
+                                @for (int s = 1; s <= 10; s++)
+                                {
+                                    <option value="@s">@s° Semestre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Semestre" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="MacAddress" />
+
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                        <i class="bi bi-shield-lock me-1"></i> 3. Dispositivo Físico Vinculado (Seguridad MAC)
+                    </h6>
+                    <div class="card bg-light border-0 rounded-3 mb-4 p-3 shadow-none">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div>
+                                <div class="small text-muted fw-semibold">DIRECCIÓN FÍSICA (MAC) DETECTADA:</div>
+                                <span class="badge bg-dark font-monospace fs-6 px-3 py-2 mt-1">
+                                    <i class="bi bi-hdd-network me-1 text-info"></i>@(Model?.MacAddress ?? ViewBag.Mac ?? "00:00:00:00:00:00")
+                                </span>
+                            </div>
+                            <div class="text-sm-end">
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
+                                    <i class="bi bi-check-circle-fill me-1"></i>Dispositivo Identificado
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-muted small">
+                            <i class="bi bi-info-circle text-primary me-1"></i>
+                            <strong>Regla de Seguridad Institucional:</strong> Tu cuenta quedará vinculada exclusivamente a la tarjeta de red física (MAC) de este dispositivo. 
+                            <strong>No se permite registrar más de una cuenta con el mismo dispositivo</strong>, ni marcar asistencias o rendir exámenes desde otro equipo no registrado.
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-2">
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold w-100 w-sm-auto">
+                            <i class="bi bi-check-circle me-1"></i> Registrarme ahora
+                        </button>
+                        <a asp-action="Login" class="btn btn-outline-secondary w-100 w-sm-auto">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Ya tengo una cuenta
+                        </a>
                     </div>
                 </form>
             </div>

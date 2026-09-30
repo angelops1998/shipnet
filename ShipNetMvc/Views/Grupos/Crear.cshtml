@@ -1,30 +1,64 @@
 @model ShipNetMvc.Models.GrupoDto
 @{
-    ViewData["Title"] = "Nuevo grupo";
+    ViewData["Title"] = "Nueva Asignación Modular";
 }
 
-<div class="card">
-    <div class="card-header">Nuevo grupo</div>
-    <div class="card-body">
-        <form method="post">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="Nombre">Nombre</label>
-                    <input class="form-control" asp-for="Nombre" placeholder="Grupo A" />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="MateriaId">Materia</label>
-                    <select class="form-select" asp-for="MateriaId" asp-items="ViewBag.Materias"></select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" asp-for="DocenteId">Docente</label>
-                    <select class="form-select" asp-for="DocenteId" asp-items="ViewBag.Docentes"></select>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-top border-4 border-primary">
+            <div class="card-header bg-white py-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary">UPDS Modal</span>
+                    <h5 class="fw-bold mb-0 text-primary">Asignar Materia a Docente (Módulo UPDS)</h5>
                 </div>
             </div>
-            <div class="mt-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <div class="card-body p-4">
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="MateriaId">Materia Académica</label>
+                            <select class="form-select" asp-for="MateriaId" asp-items="ViewBag.Materias" required></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" asp-for="DocenteId">Docente Asignado</label>
+                            <select class="form-select" asp-for="DocenteId" asp-items="ViewBag.Docentes" required></select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" asp-for="Nombre">Nombre del Grupo / Paralelo</label>
+                            <input class="form-control" asp-for="Nombre" placeholder="Ej: Grupo A" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" asp-for="Modulo">Módulo Académico UPDS</label>
+                            <select class="form-select" asp-for="Modulo" asp-items="ViewBag.Modulos" required></select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" asp-for="Turno">Turno / Horario</label>
+                            <select class="form-select" asp-for="Turno" asp-items="ViewBag.Turnos" required></select>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch p-3 border rounded bg-light">
+                                <input class="form-check-input ms-0 me-3" type="checkbox" asp-for="Activo" id="activoCheck" checked />
+                                <label class="form-check-label fw-bold" for="activoCheck">
+                                    Habilitar como Materia Activa para este Mes (Módulo en curso)
+                                </label>
+                                <div class="form-text text-muted small ms-1">
+                                    Los estudiantes y el docente tendrán esta materia disponible de inmediato para asistencia y evaluaciones.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4">Guardar Asignación</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>

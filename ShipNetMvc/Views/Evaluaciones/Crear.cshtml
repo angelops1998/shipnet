@@ -1,0 +1,407 @@
+@model ShipNetMvc.Models.CrearEvaluacionViewModel
+@{
+    ViewData["Title"] = "Nueva Evaluación";
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="bi bi-file-earmark-check me-2"></i>Programar Nueva Evaluación</h4>
+        <span class="badge bg-light text-primary">UPDS Laboratorio</span>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" id="formCrearEvaluacion">
+            <input type="hidden" asp-for="PreguntasJson" id="hiddenPreguntasJson" />
+
+            <div class="card bg-body-tertiary border-0 mb-4 p-3 rounded-3">
+                <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-info-circle me-2"></i>1. Datos Generales de la Evaluación</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold" asp-for="Titulo">Título de la evaluación</label>
+                        <input class="form-control" asp-for="Titulo" placeholder="Ej: Primer Parcial - Redes y Conectividad" required />
+                        <span asp-validation-for="Titulo" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold" asp-for="GrupoId">Grupo / Materia</label>
+                        <select class="form-select" asp-for="GrupoId" asp-items="ViewBag.Grupos"></select>
+                        <span asp-validation-for="GrupoId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" asp-for="FechaInicio">Fecha y hora de inicio</label>
+                        <input class="form-control" asp-for="FechaInicio" type="datetime-local" value="@Model.FechaInicio.ToString("yyyy-MM-ddTHH:mm")" required />
+                        <span asp-validation-for="FechaInicio" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" asp-for="FechaFin">Fecha y hora de fin</label>
+                        <input class="form-control" asp-for="FechaFin" type="datetime-local" value="@Model.FechaFin.ToString("yyyy-MM-ddTHH:mm")" required />
+                        <span asp-validation-for="FechaFin" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold" asp-for="DuracionMinutos">Límite de tiempo (minutos)</label>
+                        <div class="input-group">
+                            <input class="form-control" asp-for="DuracionMinutos" type="number" min="5" max="360" required />
+                            <span class="input-group-text">min</span>
+                        </div>
+                        <span asp-validation-for="DuracionMinutos" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-bottom pb-2 mb-3 gap-2">
+                <div>
+                    <h5 class="mb-0 text-primary fw-bold"><i class="bi bi-question-circle me-2"></i>2. Banco de Preguntas y Respuestas</h5>
+                    <small class="text-muted">Puedes incluir texto y/o imágenes en el enunciado y en cualquiera de las opciones (A, B, C, D).</small>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="agregarPreguntaVacia()">
+                    <i class="bi bi-plus-lg me-1"></i> Agregar otra pregunta
+                </button>
+            </div>
+
+            <div id="contenedorPreguntas">
+                <!-- Se inyectan dinámicamente con JavaScript -->
+            </div>
+
+            <div class="mt-4 p-3 bg-body-tertiary rounded-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <button type="button" class="btn btn-outline-primary" onclick="agregarPreguntaVacia()">
+                    <i class="bi bi-plus-circle me-1"></i> Añadir otra pregunta
+                </button>
+                <div class="d-flex gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">
+                        <i class="bi bi-check2-circle me-1"></i> Guardar y programar evaluación
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let contadorPreguntas = 0;
+
+        // Comprime imágenes automáticamente para guardado rápido en base de datos
+        function procesarArchivo(file, callback) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement("canvas");
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 850;
+
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+                    callback(dataUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function crearBloquePregunta(num, data = {}) {
+            const enunciado = data.enunciado || "";
+            const imagenUrl = data.imagenUrl || "";
+            const opA = data.opA || "";
+            const imgA = data.imgA || "";
+            const opB = data.opB || "";
+            const imgB = data.imgB || "";
+            const opC = data.opC || "";
+            const imgC = data.imgC || "";
+            const opD = data.opD || "";
+            const imgD = data.imgD || "";
+            const correcta = data.correcta || "A";
+
+            return `
+            <div class="card mb-4 border shadow-sm pregunta-item" data-id="${num}">
+                <div class="card-header bg-body-secondary d-flex justify-content-between align-items-center py-2">
+                    <span class="fw-bold"><i class="bi bi-card-text me-1"></i> Pregunta <span class="badge-num">${num}</span></span>
+                    <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2" onclick="eliminarPregunta(this)" title="Eliminar pregunta">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- ENUNCIADO -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Enunciado de la pregunta:</label>
+                        <textarea class="form-control p-enunciado mb-2" rows="2" placeholder="Escribe aquí el texto de la pregunta...">${enunciado}</textarea>
+                        
+                        <!-- Imagen del Enunciado -->
+                        <div class="p-2 border rounded bg-body-tertiary">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                <label class="small fw-semibold mb-0"><i class="bi bi-image me-1"></i>Imagen de la pregunta (Opcional):</label>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <input type="file" accept="image/*" class="form-control form-control-sm file-enunciado d-none" onchange="cargarImagenLocal(this, 'preview-enunciado-${num}', 'data-enunciado-${num}')" />
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="this.previousElementSibling.click()">
+                                        <i class="bi bi-upload me-1"></i> Subir imagen
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="pegarUrlPrompt('preview-enunciado-${num}', 'data-enunciado-${num}')">
+                                        <i class="bi bi-link-45deg me-1"></i> URL
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" class="p-imagen" id="data-enunciado-${num}" value="${imagenUrl}" />
+                            <div id="preview-enunciado-${num}" class="mt-2 ${imagenUrl ? '' : 'd-none'} text-center position-relative border rounded p-1 bg-white">
+                                <img src="${imagenUrl}" class="img-fluid rounded" style="max-height: 220px; object-fit: contain;" />
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" onclick="quitarImagen('preview-enunciado-${num}', 'data-enunciado-${num}')" title="Quitar imagen">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OPCIONES A, B, C, D -->
+                    <div class="row g-3 mb-3">
+                        <!-- OPCION A -->
+                        <div class="col-md-6">
+                            <div class="p-2 border rounded h-100 bg-body-secondary-subtle">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-primary">Opción A</span>
+                                    <div class="btn-group btn-group-sm">
+                                        <input type="file" accept="image/*" class="d-none" onchange="cargarImagenLocal(this, 'preview-a-${num}', 'data-a-${num}')" />
+                                        <button type="button" class="btn btn-outline-secondary py-0 px-2 small" onclick="this.previousElementSibling.click()" title="Adjuntar imagen"><i class="bi bi-image"></i></button>
+                                        <button type="button" class="btn btn-outline-info py-0 px-2 small" onclick="pegarUrlPrompt('preview-a-${num}', 'data-a-${num}')" title="Pegar URL imagen"><i class="bi bi-link"></i></button>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control form-control-sm p-opA mb-1" placeholder="Texto de la opción A" value="${opA}" />
+                                <input type="hidden" class="p-imgA" id="data-a-${num}" value="${imgA}" />
+                                <div id="preview-a-${num}" class="text-center position-relative border rounded p-1 bg-white ${imgA ? '' : 'd-none'}">
+                                    <img src="${imgA}" class="img-fluid rounded" style="max-height: 120px;" />
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 py-0 px-1" onclick="quitarImagen('preview-a-${num}', 'data-a-${num}')">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OPCION B -->
+                        <div class="col-md-6">
+                            <div class="p-2 border rounded h-100 bg-body-secondary-subtle">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-primary">Opción B</span>
+                                    <div class="btn-group btn-group-sm">
+                                        <input type="file" accept="image/*" class="d-none" onchange="cargarImagenLocal(this, 'preview-b-${num}', 'data-b-${num}')" />
+                                        <button type="button" class="btn btn-outline-secondary py-0 px-2 small" onclick="this.previousElementSibling.click()" title="Adjuntar imagen"><i class="bi bi-image"></i></button>
+                                        <button type="button" class="btn btn-outline-info py-0 px-2 small" onclick="pegarUrlPrompt('preview-b-${num}', 'data-b-${num}')" title="Pegar URL imagen"><i class="bi bi-link"></i></button>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control form-control-sm p-opB mb-1" placeholder="Texto de la opción B" value="${opB}" />
+                                <input type="hidden" class="p-imgB" id="data-b-${num}" value="${imgB}" />
+                                <div id="preview-b-${num}" class="text-center position-relative border rounded p-1 bg-white ${imgB ? '' : 'd-none'}">
+                                    <img src="${imgB}" class="img-fluid rounded" style="max-height: 120px;" />
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 py-0 px-1" onclick="quitarImagen('preview-b-${num}', 'data-b-${num}')">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OPCION C -->
+                        <div class="col-md-6">
+                            <div class="p-2 border rounded h-100 bg-body-secondary-subtle">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-primary">Opción C</span>
+                                    <div class="btn-group btn-group-sm">
+                                        <input type="file" accept="image/*" class="d-none" onchange="cargarImagenLocal(this, 'preview-c-${num}', 'data-c-${num}')" />
+                                        <button type="button" class="btn btn-outline-secondary py-0 px-2 small" onclick="this.previousElementSibling.click()" title="Adjuntar imagen"><i class="bi bi-image"></i></button>
+                                        <button type="button" class="btn btn-outline-info py-0 px-2 small" onclick="pegarUrlPrompt('preview-c-${num}', 'data-c-${num}')" title="Pegar URL imagen"><i class="bi bi-link"></i></button>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control form-control-sm p-opC mb-1" placeholder="Texto de la opción C" value="${opC}" />
+                                <input type="hidden" class="p-imgC" id="data-c-${num}" value="${imgC}" />
+                                <div id="preview-c-${num}" class="text-center position-relative border rounded p-1 bg-white ${imgC ? '' : 'd-none'}">
+                                    <img src="${imgC}" class="img-fluid rounded" style="max-height: 120px;" />
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 py-0 px-1" onclick="quitarImagen('preview-c-${num}', 'data-c-${num}')">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OPCION D -->
+                        <div class="col-md-6">
+                            <div class="p-2 border rounded h-100 bg-body-secondary-subtle">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-primary">Opción D</span>
+                                    <div class="btn-group btn-group-sm">
+                                        <input type="file" accept="image/*" class="d-none" onchange="cargarImagenLocal(this, 'preview-d-${num}', 'data-d-${num}')" />
+                                        <button type="button" class="btn btn-outline-secondary py-0 px-2 small" onclick="this.previousElementSibling.click()" title="Adjuntar imagen"><i class="bi bi-image"></i></button>
+                                        <button type="button" class="btn btn-outline-info py-0 px-2 small" onclick="pegarUrlPrompt('preview-d-${num}', 'data-d-${num}')" title="Pegar URL imagen"><i class="bi bi-link"></i></button>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control form-control-sm p-opD mb-1" placeholder="Texto de la opción D" value="${opD}" />
+                                <input type="hidden" class="p-imgD" id="data-d-${num}" value="${imgD}" />
+                                <div id="preview-d-${num}" class="text-center position-relative border rounded p-1 bg-white ${imgD ? '' : 'd-none'}">
+                                    <img src="${imgD}" class="img-fluid rounded" style="max-height: 120px;" />
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 py-0 px-1" onclick="quitarImagen('preview-d-${num}', 'data-d-${num}')">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESPUESTA CORRECTA -->
+                    <div class="row align-items-center bg-body-tertiary p-2 rounded">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-success mb-1"><i class="bi bi-check-circle me-1"></i>Respuesta Correcta:</label>
+                            <select class="form-select form-select-sm p-correcta fw-bold">
+                                <option value="A" ${correcta === 'A' ? 'selected' : ''}>Opción A</option>
+                                <option value="B" ${correcta === 'B' ? 'selected' : ''}>Opción B</option>
+                                <option value="C" ${correcta === 'C' ? 'selected' : ''}>Opción C</option>
+                                <option value="D" ${correcta === 'D' ? 'selected' : ''}>Opción D</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8 text-muted small">
+                            El sistema calificará automáticamente el intento del estudiante comparando con esta opción.
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function cargarImagenLocal(input, previewId, dataId) {
+            if (input.files && input.files[0]) {
+                procesarArchivo(input.files[0], function(dataUrl) {
+                    establecerImagen(previewId, dataId, dataUrl);
+                });
+            }
+        }
+
+        function pegarUrlPrompt(previewId, dataId) {
+            const actual = document.getElementById(dataId).value || "";
+            const url = prompt("Pega la dirección URL de la imagen (ej: https://...):", actual);
+            if (url !== null && url.trim() !== "") {
+                establecerImagen(previewId, dataId, url.trim());
+            }
+        }
+
+        function establecerImagen(previewId, dataId, src) {
+            document.getElementById(dataId).value = src;
+            const container = document.getElementById(previewId);
+            container.querySelector("img").src = src;
+            container.classList.remove("d-none");
+        }
+
+        function quitarImagen(previewId, dataId) {
+            document.getElementById(dataId).value = "";
+            const container = document.getElementById(previewId);
+            container.querySelector("img").src = "";
+            container.classList.add("d-none");
+        }
+
+        function agregarPreguntaVacia() {
+            contadorPreguntas++;
+            const contenedor = document.getElementById("contenedorPreguntas");
+            contenedor.insertAdjacentHTML('beforeend', crearBloquePregunta(contadorPreguntas, {}));
+        }
+
+        function eliminarPregunta(btn) {
+            const items = document.querySelectorAll(".pregunta-item");
+            if (items.length <= 1) {
+                alert("La evaluación debe tener al menos una pregunta.");
+                return;
+            }
+            const card = btn.closest(".pregunta-item");
+            card.remove();
+            renumerarPreguntas();
+        }
+
+        function renumerarPreguntas() {
+            const items = document.querySelectorAll(".pregunta-item");
+            contadorPreguntas = 0;
+            items.forEach((item, index) => {
+                contadorPreguntas = index + 1;
+                item.setAttribute("data-id", contadorPreguntas);
+                item.querySelector(".badge-num").innerText = contadorPreguntas;
+            });
+        }
+
+        // Carga inicial de preguntas sugeridas
+        document.addEventListener("DOMContentLoaded", function() {
+            contadorPreguntas = 1;
+            const contenedor = document.getElementById("contenedorPreguntas");
+            contenedor.insertAdjacentHTML('beforeend', crearBloquePregunta(1, {
+                enunciado: "¿Qué capa del modelo OSI gestiona las direcciones físicas de hardware (MAC Address)?",
+                opA: "Capa de Enlace de Datos (Data Link)",
+                opB: "Capa de Red (Network)",
+                opC: "Capa de Transporte (Transport)",
+                opD: "Capa de Aplicación (Application)",
+                correcta: "A"
+            }));
+
+            contadorPreguntas = 2;
+            contenedor.insertAdjacentHTML('beforeend', crearBloquePregunta(2, {
+                enunciado: "¿Cuál es el beneficio de la validación de dirección MAC en ShipNet durante una evaluación?",
+                opA: "Garantizar que el estudiante rinda físicamente desde una PC autorizada del laboratorio",
+                opB: "Permitir rendir exámenes remotamente desde cualquier celular fuera de la universidad",
+                opC: "Acelerar la conexión a internet del aula",
+                opD: "Descargar automáticamente las respuestas de la evaluación",
+                correcta: "A"
+            }));
+        });
+
+        // Empaquetar todo en JSON al enviar el formulario
+        document.getElementById("formCrearEvaluacion").addEventListener("submit", function(e) {
+            const items = document.querySelectorAll(".pregunta-item");
+            const listaPreguntas = [];
+
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const enunciado = item.querySelector(".p-enunciado").value.trim();
+                const imagenUrl = item.querySelector(".p-imagen").value.trim();
+                const opA = item.querySelector(".p-opA").value.trim();
+                const imgA = item.querySelector(".p-imgA").value.trim();
+                const opB = item.querySelector(".p-opB").value.trim();
+                const imgB = item.querySelector(".p-imgB").value.trim();
+                const opC = item.querySelector(".p-opC").value.trim();
+                const imgC = item.querySelector(".p-imgC").value.trim();
+                const opD = item.querySelector(".p-opD").value.trim();
+                const imgD = item.querySelector(".p-imgD").value.trim();
+                const correcta = item.querySelector(".p-correcta").value;
+
+                if (!enunciado && !imagenUrl) {
+                    alert(`La Pregunta ${i + 1} debe tener texto o una imagen en el enunciado.`);
+                    item.querySelector(".p-enunciado").focus();
+                    e.preventDefault();
+                    return;
+                }
+
+                if ((!opA && !imgA) || (!opB && !imgB) || (!opC && !imgC) || (!opD && !imgD)) {
+                    alert(`En la Pregunta ${i + 1}, todas las opciones (A, B, C y D) deben tener al menos texto o imagen.`);
+                    e.preventDefault();
+                    return;
+                }
+
+                listaPreguntas.push({
+                    Numero: i + 1,
+                    Enunciado: enunciado,
+                    ImagenUrl: imagenUrl || null,
+                    OpcionA: opA,
+                    ImagenA: imgA || null,
+                    OpcionB: opB,
+                    ImagenB: imgB || null,
+                    OpcionC: opC,
+                    ImagenC: imgC || null,
+                    OpcionD: opD,
+                    ImagenD: imgD || null,
+                    Correcta: correcta
+                });
+            }
+
+            if (listaPreguntas.length === 0) {
+                alert("Debes agregar al menos una pregunta para la evaluación.");
+                e.preventDefault();
+                return;
+            }
+
+            document.getElementById("hiddenPreguntasJson").value = JSON.stringify(listaPreguntas);
+        });
+    </script>
+}

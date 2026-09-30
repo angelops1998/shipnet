@@ -1,34 +1,279 @@
 @{
-    ViewData["Title"] = "Administración";
+    ViewData["Title"] = "Panel de Administración UPDS";
+    var modActual = ViewBag.ModuloActual as ShipNetMvc.Models.ModuloAcademico;
+    var macTerminal = ViewBag.MacTerminal as string ?? "00:00:00:00:00:00";
 }
 
-<h2 class="mb-3">Administración</h2>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="badge bg-danger rounded-pill px-3 py-1">Administrador del Sistema</span>
+            <span class="badge bg-primary rounded-pill px-3 py-1">UPDS Sede Central</span>
+        </div>
+        <h2 class="fw-bold mb-0" style="color: var(--upds-navy);">Panel de Control Académico y Laboratorios</h2>
+        <p class="text-muted mb-0">Gestión de docentes, carreras, materias, control de MACs de estudiantes, exámenes y asistencias.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Docentes" asp-action="Crear" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-person-plus"></i> + Agregar Docente
+        </a>
+        <a asp-action="Macs" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-hdd-network"></i> MACs de Estudiantes
+        </a>
+        <a asp-action="Calendario" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-calendar3"></i> Calendario 2026
+        </a>
+    </div>
+</div>
 
-<div class="row g-3">
-    <div class="col-md-4">
-        <div class="card card-equipo">
-            <div class="card-header">Equipos</div>
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="bi bi-info-circle me-2"></i>@TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Módulo Activo UPDS Banner -->
+<div class="card p-3 mb-4 border-start border-4 border-primary shadow-sm">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+            <span class="badge bg-primary mb-1">GESTIÓN MODULAR UPDS 2026</span>
+            <h4 class="fw-bold text-primary mb-0">@modActual?.Nombre (@modActual?.Mes) &mdash; En Curso</h4>
+            <div class="text-muted small mt-1">
+                <strong>Fechas oficiales:</strong> @modActual?.FechaInicio.ToString("dd/MM/yyyy") al @modActual?.FechaFin.ToString("dd/MM/yyyy") &nbsp;|&nbsp; 
+                <strong>Terminal actual detectada:</strong> <code class="fw-bold text-dark">@macTerminal</code>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Grupos" asp-action="Index" class="btn btn-sm btn-outline-primary">Ver materias activas</a>
+            <a asp-action="Macs" class="btn btn-sm btn-upds-cyan">Asignar MACs a alumnos</a>
+        </div>
+    </div>
+</div>
+
+<!-- Tarjetas KPI -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-controller="Docentes" asp-action="Index" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-primary">@ViewBag.TotalDocentes</div>
+                    <div class="kpi-label">Docentes</div>
+                </div>
+                <div class="kpi-icon bg-primary text-white"><i class="bi bi-person-badge"></i></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-action="Macs" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-success">@ViewBag.TotalEstudiantes</div>
+                    <div class="kpi-label">Estudiantes (MACs)</div>
+                </div>
+                <div class="kpi-icon bg-success text-white"><i class="bi bi-hdd-network"></i></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-controller="Carreras" asp-action="Index" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-info">@ViewBag.TotalCarreras</div>
+                    <div class="kpi-label">Carreras UPDS</div>
+                </div>
+                <div class="kpi-icon bg-info text-white"><i class="bi bi-mortarboard"></i></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-controller="Materias" asp-action="Index" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-secondary">@ViewBag.TotalMaterias</div>
+                    <div class="kpi-label">Materias</div>
+                </div>
+                <div class="kpi-icon bg-secondary text-white"><i class="bi bi-book"></i></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-controller="Grupos" asp-action="Index" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-warning">@ViewBag.TotalGrupos</div>
+                    <div class="kpi-label">Grupos Modulares</div>
+                </div>
+                <div class="kpi-icon bg-warning text-white"><i class="bi bi-layers"></i></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-4 col-xl-2">
+        <a asp-action="Asistencias" class="text-decoration-none">
+            <div class="kpi-card h-100">
+                <div>
+                    <div class="kpi-value text-danger">@ViewBag.TotalSesiones</div>
+                    <div class="kpi-label">Sesiones Asistencia</div>
+                </div>
+                <div class="kpi-icon bg-danger text-white"><i class="bi bi-clipboard-check"></i></div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Módulos de Gestión Administrativa -->
+<div class="row g-4">
+    <!-- Docentes directo a BD -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-primary">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-person-badge me-2"></i>Gestión de Docentes (Base de Datos)
+                </h5>
+                <a asp-controller="Docentes" asp-action="Index" class="btn btn-sm btn-outline-primary">Ver docentes</a>
+            </div>
             <div class="card-body">
-                <p class="card-text">PCs del laboratorio autorizadas (código, MAC, ubicación).</p>
-                <a asp-controller="Equipos" asp-action="Index" class="btn btn-primary btn-sm">Gestionar equipos</a>
+                <p class="text-muted small">
+                    El administrador crea y gestiona las cuentas de los docentes directamente en la base de datos con su correo institucional, contraseña inicial, teléfono y especialidad.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-controller="Docentes" asp-action="Crear" class="btn btn-primary btn-sm">
+                        <i class="bi bi-person-plus me-1"></i>+ Agregar Docente a la BD
+                    </a>
+                    <a asp-controller="Docentes" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-list-check me-1"></i>Listado completo
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card card-evaluacion">
-            <div class="card-header">Materias</div>
+
+    <!-- MACs de Estudiantes -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-success">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-success">
+                    <i class="bi bi-hdd-network me-2"></i>Control de MACs de Estudiantes
+                </h5>
+                <a asp-action="Macs" class="btn btn-sm btn-outline-success">Gestionar MACs</a>
+            </div>
             <div class="card-body">
-                <p class="card-text">Materias que se dictan en el laboratorio.</p>
-                <a asp-controller="Materias" asp-action="Index" class="btn btn-primary btn-sm">Gestionar materias</a>
+                <p class="text-muted small">
+                    Consulta, asigna y modifica las direcciones MAC asociadas a los estudiantes. Permite vincular el terminal físico del laboratorio a cada estudiante para validar asistencias y exámenes.
+                </p>
+                <div class="alert alert-light border p-2 mb-3 small d-flex align-items-center justify-content-between">
+                    <div><strong>Terminal actual:</strong> <code class="fw-bold text-dark">@macTerminal</code></div>
+                    <span class="badge bg-secondary">IP Local</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-action="Macs" class="btn btn-success btn-sm">
+                        <i class="bi bi-pencil-square me-1"></i>Administrar MACs de Alumnos
+                    </a>
+                    <a asp-controller="Equipos" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-pc-display me-1"></i>Catálogo de PCs
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card card-sesion">
-            <div class="card-header">Grupos</div>
+
+    <!-- Carreras y Materias UPDS -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-info">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-info">
+                    <i class="bi bi-mortarboard me-2"></i>Carreras y Materias UPDS
+                </h5>
+                <a asp-controller="Carreras" asp-action="Index" class="btn btn-sm btn-outline-info">Ver Carreras</a>
+            </div>
             <div class="card-body">
-                <p class="card-text">Grupos por materia con su docente asignado.</p>
-                <a asp-controller="Grupos" asp-action="Index" class="btn btn-primary btn-sm">Gestionar grupos</a>
+                <p class="text-muted small">
+                    Administra las 18 carreras oficiales de la UPDS organizadas por facultad (Ingeniería, Empresariales, Jurídicas, Salud y Humanidades) y su catálogo de materias por semestre.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-controller="Carreras" asp-action="Crear" class="btn btn-info text-white btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i>+ Nueva Carrera
+                    </a>
+                    <a asp-controller="Materias" asp-action="Crear" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i>+ Nueva Materia
+                    </a>
+                    <a asp-controller="Materias" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-book me-1"></i>Catálogo de Materias
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asignación Docente - Materia (Módulos) -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-warning">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-layers me-2 text-warning"></i>Asignación Modular (Docente - Materia)
+                </h5>
+                <a asp-controller="Grupos" asp-action="Index" class="btn btn-sm btn-outline-warning text-dark">Ver asignaciones</a>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    Asigna a cada docente la materia que dictará en cada uno de los 12 módulos del año UPDS y su turno. Puedes activar o desactivar la materia correspondiente al mes actual.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a asp-controller="Grupos" asp-action="Crear" class="btn btn-warning text-dark btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i>+ Asignar Docente a Materia
+                    </a>
+                    <a asp-controller="Grupos" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-toggle-on me-1"></i>Activar/Desactivar Módulos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supervisión de Exámenes -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-secondary">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-secondary">
+                    <i class="bi bi-journal-check me-2"></i>Supervisión de Exámenes y Actas
+                </h5>
+                <a asp-action="Examenes" class="btn btn-sm btn-outline-secondary">Auditar</a>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    Audita las evaluaciones programadas por los docentes, revisa las preguntas creadas y las calificaciones obtenidas por los alumnos en tiempo real.
+                </p>
+                <div class="d-flex gap-2">
+                    <a asp-action="Examenes" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-journal-text me-1"></i>Ver todas las evaluaciones (@ViewBag.TotalEvaluaciones)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supervisión de Asistencias -->
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-top border-4 border-dark">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-clipboard-data me-2"></i>Supervisión de Asistencias en Lab.
+                </h5>
+                <a asp-action="Asistencias" class="btn btn-sm btn-outline-dark">Auditar</a>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    Supervisa todas las sesiones de asistencia tomadas en los laboratorios de la universidad, fechas, materias, docentes y las computadoras MAC validadas.
+                </p>
+                <div class="d-flex gap-2">
+                    <a asp-action="Asistencias" class="btn btn-dark btn-sm">
+                        <i class="bi bi-card-checklist me-1"></i>Ver sesiones de asistencia (@ViewBag.TotalSesiones)
+                    </a>
+                    <a asp-action="Estudiantes" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-people me-1"></i>Directorio alumnos
+                    </a>
+                </div>
             </div>
         </div>
     </div>

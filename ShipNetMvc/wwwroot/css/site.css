@@ -1,254 +1,750 @@
 /* ============================================================
-   ShipNet — site.css
-   Paleta institucional (azul marino) sobre variables de Bootstrap
-   No editar wwwroot/lib/bootstrap/ — todo lo custom va aquí
+   ShipNet — Universidad Privada Domingo Savio (UPDS Bolivia)
+   Paleta Institucional: Azul Marino (#002855), Celeste UPDS (#0099da)
+   Diseño Moderno, Limpio, Modular y Profesional
    ============================================================ */
 
 :root {
-    /* --- Paleta principal ShipNet (azul institucional) --- */
-    --bs-primary: #1c3f66;
-    --bs-primary-rgb: 28, 63, 102;
-    --sn-primary-hover: #12294a;
-    --sn-primary-light: #e8eef5;
-    --sn-secondary: #4a7ab5;
-    --sn-accent: #e8a33d;
-    /* --- Estados semánticos --- */
-    --bs-success: #2e8b57;
-    --bs-success-rgb: 46, 139, 87;
-    --bs-danger: #c0392b;
-    --bs-danger-rgb: 192, 57, 43;
-    --bs-warning: #e8a33d;
-    --bs-warning-rgb: 232, 163, 61;
-    --bs-info: #4a7ab5;
-    --bs-info-rgb: 74, 122, 181;
-    /* --- Tipografía y superficie --- */
-    --bs-body-font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    --bs-body-bg: #f2f5f9;
-    --bs-body-color: #1f2a37;
-    --sn-border-radius: 0.5rem;
-    --sn-shadow: 0 2px 10px rgba(28, 63, 102, 0.1);
+    /* --- Paleta Institucional UPDS --- */
+    --upds-navy: #002855;
+    --upds-navy-dark: #001a38;
+    --upds-navy-light: #0d386c;
+    --upds-blue: #0099da;
+    --upds-blue-hover: #0082ba;
+    --upds-blue-light: #e8f5fb;
+    --upds-cyan: #00b4d8;
+    --upds-cyan-soft: #f0f9ff;
+    --upds-gold: #f59e0b;
+    --upds-gold-soft: #fef3c7;
+
+    /* Aliases usados en vistas */
+    --upds-azul: #002855;
+    --upds-celeste: #0099da;
+    --upds-azul-claro: #0099da;
+
+    /* --- Bootstrap Variables Sobrescritas --- */
+    --bs-primary: #002855;
+    --bs-primary-rgb: 0, 40, 85;
+    --bs-info: #0099da;
+    --bs-info-rgb: 0, 153, 218;
+    --bs-success: #10b981;
+    --bs-success-rgb: 16, 185, 129;
+    --bs-danger: #ef4444;
+    --bs-danger-rgb: 239, 68, 68;
+    --bs-warning: #f59e0b;
+    --bs-warning-rgb: 245, 158, 11;
+
+    /* --- Tipografía y Fondo --- */
+    --bs-body-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --bs-body-bg: #f8fafc;
+    --bs-body-color: #1e293b;
+
+    /* --- Efectos y Bordes --- */
+    --sn-radius: 14px;
+    --sn-radius-sm: 8px;
+    --sn-radius-lg: 20px;
+    --sn-shadow-sm: 0 2px 8px rgba(0, 40, 85, 0.04);
+    --sn-shadow: 0 4px 20px rgba(0, 40, 85, 0.08);
+    --sn-shadow-lg: 0 10px 30px rgba(0, 40, 85, 0.12);
+}
+
+html {
+    height: 100%;
 }
 
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
     background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    font-family: var(--bs-body-font-family);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ============================================================
-   NAVBAR
+   NAVBAR INSTITUCIONAL UPDS
    ============================================================ */
 
 .navbar-shipnet {
-    background-color: var(--bs-primary);
-    box-shadow: var(--sn-shadow);
+    background: linear-gradient(135deg, var(--upds-navy-dark) 0%, var(--upds-navy) 60%, #003e7e 100%);
+    box-shadow: 0 4px 20px rgba(0, 26, 56, 0.15);
+    padding: 0.75rem 0;
+    border-bottom: 2px solid var(--upds-blue);
 }
 
-    .navbar-shipnet .navbar-brand {
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        color: #ffffff;
-    }
-
-        .navbar-shipnet .navbar-brand::before {
-            content: "🛰";
-            margin-right: 0.4rem;
-        }
-
-    .navbar-shipnet .nav-link {
-        color: rgba(255, 255, 255, 0.85);
-        font-weight: 500;
-    }
-
-        .navbar-shipnet .nav-link:hover,
-        .navbar-shipnet .nav-link.active {
-            color: #ffffff;
-        }
-
-    .navbar-shipnet .navbar-toggler {
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-
-.footer-shipnet {
-    background-color: #12294a;
-    color: rgba(255, 255, 255, 0.75);
-    padding: 1.25rem 0;
-    margin-top: 3rem;
-    font-size: 0.875rem;
+.navbar-shipnet .navbar-brand {
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }
 
-    .footer-shipnet a {
-        color: #ffffff;
-        text-decoration: none;
-    }
-
-        .footer-shipnet a:hover {
-            text-decoration: underline;
-        }
-
-/* ============================================================
-   BOTONES
-   ============================================================ */
-
-.btn-primary {
-    --bs-btn-bg: var(--bs-primary);
-    --bs-btn-border-color: var(--bs-primary);
-    --bs-btn-hover-bg: var(--sn-primary-hover);
-    --bs-btn-hover-border-color: var(--sn-primary-hover);
-    --bs-btn-active-bg: var(--sn-primary-hover);
-    --bs-btn-active-border-color: var(--sn-primary-hover);
-    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+.brand-badge {
+    background: linear-gradient(135deg, var(--upds-blue) 0%, var(--upds-cyan) 100%);
+    color: #ffffff;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
-.btn-secondary {
-    --bs-btn-bg: #ffffff;
-    --bs-btn-border-color: var(--sn-secondary);
-    --bs-btn-color: var(--sn-secondary);
-    --bs-btn-hover-bg: var(--sn-secondary);
-    --bs-btn-hover-border-color: var(--sn-secondary);
-    --bs-btn-hover-color: #ffffff;
+.navbar-shipnet .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
 }
 
-.btn-danger {
-    --bs-btn-bg: var(--bs-danger);
-    --bs-btn-border-color: var(--bs-danger);
-    --bs-btn-hover-bg: #29755F;
-    --bs-btn-hover-border-color: #96291d;
+.navbar-shipnet .nav-link:hover,
+.navbar-shipnet .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.modulo-pill {
+    background: rgba(0, 153, 218, 0.2);
+    border: 1px solid rgba(0, 153, 218, 0.5);
+    color: #7dd3fc;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.role-pill {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50px;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
 }
 
 /* ============================================================
-   CARDS
+   CARDS Y CONTENEDORES MODERNOS
    ============================================================ */
 
 .card {
-    border: none;
-    border-radius: var(--sn-border-radius);
+    border: 1px solid rgba(0, 40, 85, 0.08);
+    border-radius: var(--sn-radius);
+    background-color: #ffffff;
     box-shadow: var(--sn-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--sn-shadow-lg);
 }
 
 .card-header {
-    background-color: var(--sn-primary-light);
-    border-bottom: 1px solid rgba(28, 63, 102, 0.15);
-    font-weight: 600;
-    color: var(--bs-primary);
-    border-top-left-radius: var(--sn-border-radius);
-    border-top-right-radius: var(--sn-border-radius);
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(0, 40, 85, 0.08);
+    font-weight: 700;
+    color: var(--upds-navy);
+    padding: 1rem 1.25rem;
 }
 
+.card-header-upds {
+    background: linear-gradient(135deg, var(--upds-navy) 0%, #00458a 100%);
+    color: #ffffff !important;
+}
+
+.card-header-upds * {
+    color: #ffffff !important;
+}
+
+/* Indicadores de tipo de tarjeta */
 .card-sesion {
-    border-left: 4px solid var(--bs-primary);
+    border-top: 4px solid var(--upds-blue);
 }
 
 .card-evaluacion {
-    border-left: 4px solid var(--sn-accent);
+    border-top: 4px solid var(--upds-gold);
 }
 
 .card-equipo {
-    border-left: 4px solid var(--sn-secondary);
+    border-top: 4px solid var(--upds-navy);
+}
+
+.card-modular {
+    border-top: 4px solid #10b981;
+}
+
+/* Hero Banner UPDS */
+.upds-hero {
+    background: linear-gradient(135deg, var(--upds-navy-dark) 0%, var(--upds-navy) 65%, #004080 100%);
+    color: #ffffff;
+    border-radius: var(--sn-radius-lg);
+    padding: 2.5rem 2rem;
+    box-shadow: var(--sn-shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.upds-hero::after {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(0, 153, 218, 0.25) 0%, rgba(0, 40, 85, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 /* ============================================================
-   ALERTAS
+   BOTONES MODERNOS
    ============================================================ */
 
-.alert {
-    border: none;
-    border-radius: var(--sn-border-radius);
-    border-left: 4px solid transparent;
-}
-
-.alert-success {
-    background-color: #e7f4ec;
-    color: #1f5f3d;
-    border-left-color: var(--bs-success);
-}
-
-.alert-danger {
-    background-color: #fbebe9;
-    color: #7d281e;
-    border-left-color: var(--bs-danger);
-}
-
-.alert-warning {
-    background-color: #fdf1e0;
-    color: #8a5e17;
-    border-left-color: var(--bs-warning);
-}
-
-/* ============================================================
-   FORMULARIOS
-   ============================================================ */
-
-.form-label {
+.btn {
+    border-radius: var(--sn-radius-sm);
     font-weight: 600;
-    color: var(--bs-body-color);
+    font-size: 0.92rem;
+    padding: 0.55rem 1.15rem;
+    transition: all 0.2s ease-in-out;
 }
 
-.form-control:focus,
-.form-select:focus {
-    border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.2);
+.btn-primary {
+    background: linear-gradient(135deg, var(--upds-navy) 0%, var(--upds-navy-light) 100%);
+    border-color: var(--upds-navy);
+    color: #ffffff;
 }
 
-.form-text {
-    color: #5c6b78;
+.btn-primary:hover,
+.btn-primary:focus {
+    background: linear-gradient(135deg, var(--upds-navy-dark) 0%, var(--upds-navy) 100%);
+    border-color: var(--upds-navy-dark);
+    box-shadow: 0 4px 12px rgba(0, 40, 85, 0.25);
+    transform: translateY(-1px);
 }
 
-.is-invalid ~ .invalid-feedback,
-.invalid-feedback {
-    font-size: 0.85rem;
+.btn-upds-cyan {
+    background: linear-gradient(135deg, var(--upds-blue) 0%, var(--upds-cyan) 100%);
+    border: none;
+    color: #ffffff;
+}
+
+.btn-upds-cyan:hover {
+    background: linear-gradient(135deg, var(--upds-blue-hover) 0%, var(--upds-blue) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 153, 218, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    border-color: var(--upds-navy);
+    color: var(--upds-navy);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--upds-navy);
+    color: #ffffff;
 }
 
 /* ============================================================
-   TABLAS
+   TABLAS MODERNAS
    ============================================================ */
 
 .table-shipnet {
     background-color: #ffffff;
-    border-radius: var(--sn-border-radius);
+    border-radius: var(--sn-radius);
     overflow: hidden;
     box-shadow: var(--sn-shadow);
+    border: 1px solid rgba(0, 40, 85, 0.06);
 }
 
-    .table-shipnet thead {
-        background-color: var(--bs-primary);
-        color: #ffffff;
-    }
+.table-shipnet thead {
+    background: linear-gradient(135deg, var(--upds-navy) 0%, var(--upds-navy-light) 100%);
+    color: #ffffff;
+}
 
-    .table-shipnet tbody tr:hover {
-        background-color: var(--sn-primary-light);
-    }
+.table-shipnet thead th {
+    padding: 0.9rem 1rem;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border: none;
+}
+
+.table-shipnet tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-shipnet tbody tr:hover {
+    background-color: var(--upds-blue-light);
+}
+
+.table-shipnet tbody td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid rgba(0, 40, 85, 0.05);
+    font-size: 0.92rem;
+}
 
 /* ============================================================
-   CONTENEDOR CENTRAL
+   CALENDARIO MODULAR UPDS (12 MÓDULOS)
    ============================================================ */
 
+.upds-calendario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.modulo-card {
+    border: 1px solid #e2e8f0;
+    border-radius: var(--sn-radius);
+    background: #ffffff;
+    padding: 1.25rem;
+    position: relative;
+    transition: all 0.25s ease;
+}
+
+.modulo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--sn-shadow-lg);
+}
+
+.modulo-card.modulo-activo {
+    border: 2px solid var(--upds-blue);
+    background: linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%);
+    box-shadow: 0 8px 25px rgba(0, 153, 218, 0.18);
+}
+
+.modulo-card.modulo-activo::before {
+    content: "MÓDULO ACTUAL";
+    position: absolute;
+    top: -12px;
+    right: 15px;
+    background: var(--upds-blue);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+}
+
+.modulo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.modulo-num {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--upds-navy);
+}
+
+.modulo-fechas {
+    font-size: 0.85rem;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.modulo-tag-inicio {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+
+.modulo-tag-fin {
+    display: inline-block;
+    background: #f3e8ff;
+    color: #6b21a8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   KPI METRICS WIDGETS
+   ============================================================ */
+
+.kpi-card {
+    border-radius: var(--sn-radius);
+    padding: 1.25rem 1.5rem;
+    background: #ffffff;
+    border: 1px solid rgba(0, 40, 85, 0.08);
+    box-shadow: var(--sn-shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--upds-navy);
+    line-height: 1;
+}
+
+.kpi-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* ============================================================
+   ALERTAS Y NOTIFICACIONES
+   ============================================================ */
+
+.alert {
+    border: none;
+    border-radius: var(--sn-radius);
+    border-left: 5px solid transparent;
+    padding: 1rem 1.25rem;
+    box-shadow: var(--sn-shadow-sm);
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border-left-color: var(--bs-success);
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-left-color: var(--bs-danger);
+}
+
+.alert-info {
+    background-color: var(--upds-cyan-soft);
+    color: #0c4a6e;
+    border-left-color: var(--upds-blue);
+}
+
+.alert-warning {
+    background-color: var(--upds-gold-soft);
+    color: #92400e;
+    border-left-color: var(--upds-gold);
+}
+
+/* ============================================================
+   FOOTER INSTITUCIONAL
+   ============================================================ */
+
+.footer-shipnet {
+    background: var(--upds-navy-dark);
+    color: rgba(255, 255, 255, 0.75);
+    padding: 1.25rem 0;
+    margin-top: auto !important;
+    flex-shrink: 0;
+    width: 100%;
+    border-top: 2px solid var(--upds-blue);
+    font-size: 0.85rem;
+}
+
+.footer-shipnet a {
+    color: #7dd3fc;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+.footer-shipnet a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
 .main-container {
-    min-height: calc(100vh - 220px);
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    flex: 1 0 auto;
+    width: 100%;
+    padding-top: 1.5rem;
+    padding-bottom: 2.5rem;
 }
 
-html, body {
-    overflow-x: hidden;
-    max-width: 100%;
+/* ============================================================
+   MODO OSCURO INSTITUCIONAL (UPDS NIGHT THEME)
+   Colores modernos: Deep Navy (#0b1329), Slate (#151f38, #1a2744),
+   Acentos: Cyan (#38bdf8), Azul UPDS (#0099da)
+   ============================================================ */
+
+[data-bs-theme="dark"] {
+    --bs-body-bg: #0b1329;
+    --bs-body-color: #f1f5f9;
+    --bs-primary: #0099da;
+    --bs-primary-rgb: 0, 153, 218;
+
+    background-color: #0b1329;
+    color: #f1f5f9;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
+[data-bs-theme="dark"] body {
+    background-color: #0b1329;
+    color: #f1f5f9;
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bs-body-bg);
+/* Navbar en Modo Oscuro */
+[data-bs-theme="dark"] .navbar-shipnet {
+    background: linear-gradient(135deg, #060b18 0%, #0d172e 60%, #112040 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid #0099da;
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--bs-primary);
-    border-radius: 5px;
+/* Tarjetas y Contenedores */
+[data-bs-theme="dark"] .card {
+    background-color: #131d35 !important;
+    border-color: #202f52 !important;
+    color: #f1f5f9;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--sn-primary-hover);
-    }
+[data-bs-theme="dark"] .card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: #172442 !important;
+    border-bottom-color: #202f52 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-bs-theme="dark"] .card-header-upds {
+    background: linear-gradient(135deg, #0c1830 0%, #172b54 100%) !important;
+}
+
+/* KPI Cards */
+[data-bs-theme="dark"] .kpi-card {
+    background: #131d35 !important;
+    border-color: #202f52 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .kpi-card:hover {
+    border-color: #38bdf8 !important;
+    transform: translateY(-2px);
+}
+
+[data-bs-theme="dark"] .kpi-value {
+    color: #38bdf8 !important;
+}
+
+[data-bs-theme="dark"] .kpi-label {
+    color: #94a3b8 !important;
+}
+
+/* Tablas */
+[data-bs-theme="dark"] .table,
+[data-bs-theme="dark"] .table-shipnet {
+    background-color: #131d35 !important;
+    color: #f1f5f9 !important;
+    border-color: #202f52 !important;
+}
+
+[data-bs-theme="dark"] .table thead,
+[data-bs-theme="dark"] .table thead th,
+[data-bs-theme="dark"] .table-light,
+[data-bs-theme="dark"] thead.table-light th {
+    background-color: #172442 !important;
+    color: #7dd3fc !important;
+    border-bottom: 2px solid #202f52 !important;
+}
+
+[data-bs-theme="dark"] .table tbody tr td {
+    background-color: #131d35 !important;
+    color: #e2e8f0 !important;
+    border-bottom: 1px solid #1a2744 !important;
+}
+
+[data-bs-theme="dark"] .table-hover tbody tr:hover td {
+    background-color: #1a2744 !important;
+    color: #ffffff !important;
+}
+
+/* Formularios e Inputs */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: #172442 !important;
+    border-color: #25365e !important;
+    color: #f8fafc !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+    background-color: #1d2d52 !important;
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25) !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #64748b !important;
+}
+
+[data-bs-theme="dark"] .form-label,
+[data-bs-theme="dark"] .form-check-label {
+    color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .input-group-text {
+    background-color: #111a30 !important;
+    border-color: #25365e !important;
+    color: #94a3b8 !important;
+}
+
+/* Modales */
+[data-bs-theme="dark"] .modal-content {
+    background-color: #131d35 !important;
+    color: #f8fafc !important;
+    border: 1px solid #25365e !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-bs-theme="dark"] .modal-header {
+    background: linear-gradient(135deg, #0b1426 0%, #152547 100%) !important;
+    border-bottom-color: #202f52 !important;
+}
+
+[data-bs-theme="dark"] .modal-footer {
+    background-color: #0e1628 !important;
+    border-top-color: #202f52 !important;
+}
+
+/* Menús Desplegables */
+[data-bs-theme="dark"] .dropdown-menu {
+    background-color: #131d35 !important;
+    border: 1px solid #25365e !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-bs-theme="dark"] .dropdown-item {
+    color: #e2e8f0 !important;
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover {
+    background-color: #1d2d52 !important;
+    color: #38bdf8 !important;
+}
+
+[data-bs-theme="dark"] .dropdown-divider {
+    border-top-color: #25365e !important;
+}
+
+/* Clases Utilitarias */
+[data-bs-theme="dark"] .text-dark {
+    color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+    color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .bg-white {
+    background-color: #131d35 !important;
+}
+
+[data-bs-theme="dark"] .bg-light {
+    background-color: #172442 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-bs-theme="dark"] .border {
+    border-color: #202f52 !important;
+}
+
+[data-bs-theme="dark"] .border-bottom {
+    border-bottom-color: #202f52 !important;
+}
+
+[data-bs-theme="dark"] .border-top {
+    border-top-color: #202f52 !important;
+}
+
+/* Badges y Códigos */
+[data-bs-theme="dark"] .badge.bg-light {
+    background-color: #172442 !important;
+    color: #7dd3fc !important;
+    border-color: #25365e !important;
+}
+
+[data-bs-theme="dark"] code {
+    background-color: #172442 !important;
+    color: #38bdf8 !important;
+    border: 1px solid #202f52;
+}
+
+/* Tarjetas de Módulo UPDS */
+[data-bs-theme="dark"] .modulo-card {
+    background: #131d35 !important;
+    border-color: #202f52 !important;
+    color: #f8fafc;
+}
+
+[data-bs-theme="dark"] .modulo-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .modulo-card.modulo-activo {
+    border-color: #0099da !important;
+    background: linear-gradient(to bottom, #112340 0%, #131d35 100%) !important;
+    box-shadow: 0 8px 25px rgba(0, 153, 218, 0.25) !important;
+}
+
+[data-bs-theme="dark"] .modulo-num {
+    color: #38bdf8 !important;
+}
+
+[data-bs-theme="dark"] .modulo-fechas {
+    color: #94a3b8 !important;
+}
+
+/* Footer en Modo Oscuro */
+[data-bs-theme="dark"] .footer-shipnet {
+    background: linear-gradient(135deg, #060b18 0%, #0d172e 100%) !important;
+    border-top: 1px solid #202f52 !important;
+}
+
+/* Botón de cambio de tema */
+.theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #38bdf8;
+    transform: scale(1.08);
+}

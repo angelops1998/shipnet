@@ -1,0 +1,32 @@
+@model ShipNetMvc.Models.EquipoDto
+@{
+    ViewData["Title"] = "Editar equipo";
+}
+
+<div class="card">
+    <div class="card-header">Editar equipo</div>
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="Codigo">Código</label>
+                    <input class="form-control" asp-for="Codigo" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="MacAddress">MAC Address</label>
+                    <input class="form-control" asp-for="MacAddress" required />
+                    <div class="form-text">Formato: AA:BB:CC:DD:EE:FF</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" asp-for="Ubicacion">Ubicación</label>
+                    <input class="form-control" asp-for="Ubicacion" />
+                </div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
